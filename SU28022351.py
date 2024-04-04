@@ -20,16 +20,21 @@ remove arguments as you see fit. We provide the function signatures only as a
 guide for how we think you can start to approach the project.
 """
 
-#imports
+#IMPORTS================================================================================================================
 import stdio
 import sys
 import stdarray
+#=======================================================================================================================
 
 
-#global variables
+#GLOBALS================================================================================================================
 turn = 1 #keeps track of who's turn it is (odd = light and even = dark)
+maxRowGlobal = None
+maxColGlobal = None
+#=======================================================================================================================
 
 
+#CHECKS=================================================================================================================
 #validates if the variables given for the board and gamemode are viable
 #returns false if arguements are not viable
 #WORKS
@@ -47,7 +52,7 @@ def checkArgs(maxRow, maxCol, guiMode):
     #if we get here then the arguements are valid
     return True
     
-    
+#-----------------------------------------------------------------------------------------------------------------------  
     
 #checking if there are either too few or too many arguements
 #WORKS
@@ -62,6 +67,7 @@ def checkNumArgs(numArgs):
     #if we get here then the number of arguements is correct
     return True
 
+#-----------------------------------------------------------------------------------------------------------------------  
 
 #checks if a sink is in a valid position
 #WORKS
@@ -80,7 +86,7 @@ def checkSinkRange(maxRow, maxCol, sinkRow, sinkCol):
     stdio.writeln("ERROR: Sink in the wrong position")
     return False
 
-
+#-----------------------------------------------------------------------------------------------------------------------  
 
 #checks if a piece is in the correct position
 #WORKS
@@ -93,7 +99,7 @@ def checkPieceRange(maxRow, maxCol, pieceRow, pieceCol):
     #if we get here, the piece is in the correct position
     return True
 
-
+#-----------------------------------------------------------------------------------------------------------------------  
 
 #checks if the piece is upright or on its side
 #WORKS
@@ -125,10 +131,270 @@ def checkPieceUpright(row, col, board):
         stdio.writeln("True")
         return True
 
+#-----------------------------------------------------------------------------------------------------------------------  
+
+#checks if the given move is possible or not
+#NO IDEA IF THIS WORKS OR NOT (I AM PRAYING OH MY GOSH)
+def validateMove(row, col, direction, board):
+    #MOVING A 1X1 PIECE
+    if(board[row][col] == "a" or board[row][col] == "A"):
+        #checking if the space next to the piece is empty
+        #moving up
+        if(direction == "u"):
+            #checking if the board border is reached or not
+            if(row - 1 >= 0):
+                if(board[row - 1][col] == " " or board[row - 1][col] == "s"):
+                    return True
+        #moving down
+        elif(direction == "d"):
+            #checking if the board border is reached or not
+            if(row + 1 <= len(board) - 1):
+                if(board[row + 1][col] == " " or board[row + 1][col] == "s"):
+                    return True
+        #moving left
+        elif(direction == "l"):
+            #checking if the board border is reached or not
+            if(col - 1 >= 0):
+                if(board[row][col - 1] == " " or board[row][col - 1] == "s"):
+                    return True
+        #moving right
+        elif(direction == "r"):
+            #checking if the board border is reached or not
+            if(col + 1 <= len(board[0]) - 1):
+                if(board[row][col + 1] == " " or board[row][col + 1] == "s"):
+                    return True
+            
+            
+    #MOVING A 1X2 PIECE
+    elif(board[row][col] == "b" or board[row][col] == "B"):
+        #checking if the piece is upright or not
+        if(checkPieceUpright(row, col, board)):
+            #checking if the 2 spaces next to the piece is empty
+            #moving up
+            if(direction == "u"):
+                #checking if the board border is reached or not
+                if(row - 2 >= 0): 
+                    if((board[row - 1][col] == " " and board[row - 2][col] == " ") or (board[row - 1][col] == "s") and (board[row - 2][col] == "s")):
+                        return True
+            #moving down
+            elif(direction == "d"):
+                #checking if the board border is reached or not
+                if(row + 2 <= len(board) - 1):
+                    if((board[row + 1][col] == " " and board[row + 2][col] == " ") or (board[row + 1][col] == "s") and (board[row + 2][col] == "s")):
+                        return True
+            #moving left
+            elif(direction == "l"):
+                #checking if the board border is reached or not
+                if(col - 2 >= 0):
+                    if((board[row][col - 1] == " " and board[row][col - 2] == " ") or (board[row][col - 1] == "s") and (board[row][col - 2] == "s")):
+                        return True
+            #moving right
+            elif(direction == "r"):
+                #checking if the board border is reached or not
+                if(col + 2 <= len(board[0]) - 1):
+                    if((board[row][col + 1] == " " and board[row][col + 2] == " ") or (board[row][col + 1] == "s") and (board[row][col + 2] == "s")):
+                        return True
+        
+        else: #piece is on its side
+            #finding the direction the piece is lying in
+            lyingDirection = None 
+            value = (row*len(board[0][:])) + col 
+            #the value associated with the piece will only ever be down or to the right of the coordinates given because the coordinates are the bottom left of the piece
+            #down
+            if(board[row+1][col] == str(value)):
+                lyingDirection = "vertical"
+            #right
+            else:
+                lyingDirection = "horizontal"
+            
+            
+            #checking if the spaces required for the piece to move are empty
+            #vertical piece
+            if(lyingDirection == "vertical"):
+                #moving up
+                if(direction == "u"):
+                    #checking if the board border is reached or not
+                    if(row - 1 >= 0): #only need to check for one field because the piece will flip over into its upright position
+                        if((board[row - 1][col] == " ") or (board[row - 1][col] == "s")):
+                            return True
+                #moving down
+                elif(direction == "d"):
+                    #checking if the board border is reached or not
+                    if(row + 2 <= len(board) - 1): #only one field for the same reason as the up direction but needs to be +2 to account for the field the piece is in under its coords
+                        if((board[row + 2][col] == " ") or (board[row + 2][col] == "s")):
+                            return True
+                #moving left
+                elif(direction == "l"):
+                    #checking if the board border is reached or not
+                    if(col - 1 >= 0):
+                        if((board[row][col - 1] == " " and board[row + 1][col - 1] == " ") or (board[row][col - 1] == "s" and board[row + 1][col - 1] == "s")):
+                            return True
+                elif(direction == "r"):
+                    if(col + 1 <= len(board[0]) - 1):
+                        if((board[row][col + 1] == " " and board[row + 1][col + 1] == " ") or (board[row][col + 1] == "s" and board[row + 1][col + 1] == "s")):
+                            return True
+              
+            #horizontal piece          
+            else: 
+                #moving up
+                if(direction == "u"):
+                    #checking if the board border is reached or not
+                    if(row - 1 >= 0):
+                        if((board[row - 1][col] == " " and board[row - 1][col + 1] == " ") or (board[row - 1][col] == "s" and board[row - 1][col + 1] == "s")):
+                            return True
+                #moving down
+                elif(direction == "d"):
+                    #checking if the board border is reached or not
+                    if(row + 1 <= len(board) - 1):
+                        if((board[row + 1][col] == " " and board[row + 1][col + 1] == " ") or (board[row + 1][col] == "s" and board[row + 1][col + 1] == "s")):
+                            return True
+                #moving left
+                elif(direction == "l"):
+                    #checking if the board border is reached or not
+                    if(col - 1 >= 0):
+                        if((board[row][col - 1] == " ") or (board[row][col - 1] == "s")):
+                            return True
+                #moving right
+                elif(direction == "r"):
+                    #checking if the board border is reached or not
+                    if(col + 2 <= len(board[0]) - 1):
+                        if((board[row][col + 2] == " ") or (board[row][col + 2] == "s")):
+                            return True
+            
+        
+    #MOVING A 1X3 PIECE
+    elif(board[row][col] == "c" or board[row][col] == "C"):
+        #checking if the piece is upright or not
+        if(checkPieceUpright(row, col, board)):
+            #checking if the 3 spaces next to the piece is empty
+            #moving up
+            if(direction == "u"):
+                #checking if the board border is reached or not
+                if(row - 3 >= 0):
+                    if((board[row - 1][col] == " " and board[row - 2][col] == " " and board[row - 3][col] == " ") or (board[row - 1][col] == "s" and board[row - 2][col] == "s" and board[row - 3][col] == "s")):
+                        return True
+            #moving down
+            elif(direction == "d"):
+                #checking if the board border is reached or not
+                if(row + 3 <= len(board) - 1):
+                    if((board[row + 1][col] == " " and board[row + 2][col] == " " and board[row + 3][col] == " ") or (board[row + 1][col] == "s" and board[row + 2][col] == "s" and board[row + 3][col] == "s")):
+                        return True
+            #moving left
+            elif(direction == "l"):
+                #checking if the board border is reached or not
+                if(col - 3 >= 0):
+                    if((board[row][col - 1] == " " and board[row][col - 2] == " " and board[row][col - 3] == " ") or (board[row][col - 1] == "s" and board[row][col - 2] == "s" and board[row][col - 3] == "s")):
+                        return True
+            #moving right
+            elif(direction == "r"):
+                #checking if the board border is reached or not
+                if(col + 3 <= len(board[0]) - 1):
+                    if((board[row][col + 1] == " " and board[row][col + 2] == " " and board[row][col + 3] == " ") or (board[row][col + 1] == "s" and board[row][col + 2] == "s" and board[row][col + 3] == "s")):
+                        return True
+        
+        else: #piece is on its side
+            #finding the direction the piece is lying in
+            lyingDirection = None 
+            value = (row*len(board[0][:])) + col 
+            #the value associated with the piece will only ever be down or to the right of the coordinates given because the coordinates are the bottom left of the piece
+            #down
+            if(board[row+1][col] == str(value)):
+                lyingDirection = "vertical"
+            #right
+            else:
+                lyingDirection = "horizontal"
+                
+                
+            #checking if the spaces required for the piece to move are empty
+            #vertical piece
+            if(lyingDirection == "vertical"):
+                #moving up
+                if(direction == "u"):
+                    #checking if the board border is reached or not
+                    if(row - 1 >= 0): #only need to check for one field because the piece will flip over into its upright position
+                        if((board[row - 1][col] == " ") or (board[row - 1][col] == "s")):
+                            return True
+                #moving down
+                elif(direction == "d"):
+                    #checking if the board border is reached or not
+                    if(row + 3 <= len(board) - 1): #only one field for the same reason as the up direction but needs to be +2 to account for the field the piece is in under its coords
+                        if((board[row + 3][col] == " ") or (board[row + 3][col] == "s")):
+                            return True
+                #moving left
+                elif(direction == "l"):
+                    #checking if the board border is reached or not
+                    if(col - 1 >= 0):
+                        if((board[row][col - 1] == " " and board[row + 1][col - 1] == " " and board[row + 2][col - 1] == " ") or (board[row][col - 1] == "s" and board[row + 1][col - 1] == "s" and board[row + 2][col - 1] == "s")):
+                            return True
+                #moving right
+                elif(direction == "r"):
+                    #checking if the board border is reached or not
+                    if(col + 1 <= len(board[0]) - 1):
+                        if((board[row][col + 1] == " " and board[row + 1][col + 1] == " " and board[row + 2][col + 1] == " ") or (board[row][col + 1] == "s" and board[row + 1][col + 1] == "s" and board[row + 2][col + 1] == "s")):
+                            return True
+                        
+            #horizontal piece
+            else:   
+                #moving up
+                if(direction == "u"):
+                    #checking if the board border is reached or not
+                    if(row - 1 >= 0):
+                        if((board[row - 1][col] == " " and board[row - 1][col + 1] == " " and board[row - 1][col + 2] == " ") or (board[row - 1][col] == "s" and board[row - 1][col + 1] == "s"  and board[row - 1][col + 2] == "s")):
+                            return True
+                #moving down
+                elif(direction == "d"):
+                    #checking if the board border is reached or not
+                    if(row + 1 <= len(board) - 1):
+                        if((board[row + 1][col] == " " and board[row + 1][col + 1] == " " and board[row + 1][col + 2] == " ") or (board[row + 1][col] == "s" and board[row + 1][col + 1] == "s"  and board[row + 1][col + 2] == "s")):
+                            return True
+                #moving left
+                elif(direction == "l"):
+                    #checking if the board border is reached or not
+                    if(col - 1 >= 0):
+                        if((board[row][col - 1] == " ") or (board[row][col - 1] == "s")):
+                            return True
+                #moving right
+                elif(direction == "r"):
+                    #checking if the board border is reached or not
+                    if(col + 3 <= len(board[0]) - 1):
+                        if((board[row][col + 3] == " ") or (board[row][col + 3] == "s")):
+                            return True
+                        
+        
+    
+    #MOVING A 2X2 PIECE          
+    elif(board[row][col] == "d" or board[row][col] == "D"):
+        #moving up
+        if(direction == "u"):
+            #checking if the board border is reached or not
+            if(row - 2 >= 0):
+                if((board[row - 1][col] == " " and board[row - 2][col] == " " and board[row - 1][col + 1] == " " and board[row - 2][col + 1] == " ") or (board[row - 1][col] == "s" and board[row - 2][col] == "s" and board[row - 1][col + 1] == "s" and board[row - 2][col + 1] == "s")):
+                    return True
+        #moving down
+        elif(direction == "d"):
+            #checking if the board border is reached or not
+            if(row + 3 <= len(board) - 1):
+                if((board[row + 2][col] == " " and board[row + 3][col] == " " and board[row + 2][col + 1] == " " and board[row + 3][col + 1] == " ") or (board[row + 2][col] == "s" and board[row + 3][col] == "s" and board[row + 2][col + 1] == "s" and board[row + 3][col + 1] == "s")):
+                    return True
+        #moving left
+        elif(direction == "l"):
+            #checking if the board border is reached or not
+            if(col - 2 >= 0):
+                if((board[row][col - 1] == " " and board[row][col - 2] == " " and board[row + 1][col - 1] == " " and board[row + 1][col - 2] == " ") or (board[row][col - 1] == "s" and board[row][col - 2] == "s" and board[row + 1][col - 1] == "s" and board[row + 1][col - 2] == "s")):
+                    return True
+        #moving right
+        elif(direction == "r"):
+            #checking if the board border is reached or not
+            if(col + 3 <= len(board[0]) - 1):
+                if((board[row][col + 2] == " " and board[row][col + 3] == " " and board[row + 1][col + 2] == " " and board[row + 1][col + 3] == " ") or (board[row][col + 2] == "s" and board[row][col + 3] == "s" and board[row + 1][col + 2] == "s" and board[row + 1][col + 3] == "s")):
+                    return True
+#=======================================================================================================================
 
 
+#MOVES=================================================================================================================
 #gets all the field coordinates that a piece occupies
 #NO IDEA IF THIS WORKS OR NOT BUT LETS GO WITH NO BUT HAVE HOPE
+#MIGHT NOT NEED THIS
 def getPieceFields(row, col, board):
     #variables
     coords = []
@@ -147,30 +413,7 @@ def getPieceFields(row, col, board):
     #returning the array of coordinates
     return coords
 
-
-
-def validateMove(row, col, direction, board):
-    """
-    Checks whether the given move is valid by checking that all aspects of the
-    move are legal.
-
-    Args:
-        row (int): The row of the object to move
-        col (int): The column of the object to move
-        direction (str): The direction of the move
-        board (2D array of str): The game board
-
-    Returns:
-        bool: True if the move is valid, False otherwise
-    """
-    # This function is important for checking whether a move given by a player
-    # is valid and can be played, however it may also be useful for determining
-    # if a player has valid moves left or not.
-    # TODO: implement this function.
-    # remove the following line when you add something to this function:
-    pass
-
-
+#-----------------------------------------------------------------------------------------------------------------------  
 
 def doMove(row, col, direction, board, scores, guiMode):
     """
@@ -184,11 +427,27 @@ def doMove(row, col, direction, board, scores, guiMode):
         scores (array of int): The current scores for each player
         gui_mode (bool): The mode of the game, True if gui_mode, False if terminal mode
     """
+    
+    #direction
+        #getting the direction it lies in
+        #NEEDED FOR MOVE FUNCTION AND NOT FOR THIS FUNCTION 
+        # else:
+        #     moveDirection = string[len(string) - 1]
+                
+        #     if(moveDirection == "l"):
+        #         stdio.writeln("left")
+        #     elif(moveDirection == "r"):
+        #         stdio.writeln("right")
+        #     elif(moveDirection == "u"):
+        #         stdio.writeln("up")
+        #     elif(moveDirection == "d"):
+        #         stdio.writeln("down")  
+    
     # This function may be useful for separating out the logic of doing a move.
     # remove the following line when you add something to this function:
     pass
 
-
+#-----------------------------------------------------------------------------------------------------------------------  
 
 def generateAllMoves(board):
     """
@@ -205,9 +464,10 @@ def generateAllMoves(board):
     # checking whether a player has a valid move left to play.
     # remove the following line when you add something to this function:
     pass
+#=======================================================================================================================
 
 
-
+#BOARD=================================================================================================================
 #reads the arguements given on the first start up of the game and returns them as an array
 #WORKS BUT NEEDS ERROR CHECKS 
 def readBoard(maxRow, maxCol):
@@ -287,25 +547,10 @@ def readBoard(maxRow, maxCol):
         #getting the value of the next piece
         piece = stdio.readString()
                 
-        #direction
-        #getting the direction it lies in
-        #NEEDED FOR MOVE FUNCTION AND NOT FOR THIS FUNCTION 
-        # else:
-        #     moveDirection = string[len(string) - 1]
-                
-        #     if(moveDirection == "l"):
-        #         stdio.writeln("left")
-        #     elif(moveDirection == "r"):
-        #         stdio.writeln("right")
-        #     elif(moveDirection == "u"):
-        #         stdio.writeln("up")
-        #     elif(moveDirection == "d"):
-        #         stdio.writeln("down")  
-                
     #returning the board with all the given pieces
     return board
 
-
+#-----------------------------------------------------------------------------------------------------------------------  
 
 #prints the board and everything in it in a grid-like model
 #WORKS
@@ -343,7 +588,7 @@ def printBoard(board):
         stdio.write("--+")
     stdio.writeln()
 
-
+#-----------------------------------------------------------------------------------------------------------------------  
 
 def drawGame(board):
     """
@@ -356,9 +601,10 @@ def drawGame(board):
     # re-draw the game for the GUI.
     # remove the following line when you add something to this function:
     pass
+#=======================================================================================================================
 
 
-
+#GAME==================================================================================================================
 def gameLoop(board, guiMode):
     """
     Executes the main game loop including
@@ -376,9 +622,10 @@ def gameLoop(board, guiMode):
     # TODO: implement this function.
     # remove the following line when you add something to this function:
     pass
+#=======================================================================================================================
 
 
-
+#MAIN==================================================================================================================
 if __name__ == "__main__":
     # TODO: put logic here to check if the command-line arguments are correct,
     # and then call the game functions using these arguments. The following code
@@ -393,9 +640,15 @@ if __name__ == "__main__":
         maxCol = sys.argv[2]
         guiMode = sys.argv[3]
         
+        #setting the global variables
+        maxRowGlobal = maxRow
+        maxColGlobal = maxCol
+        
         #performing error checks to ensure the arguements are valid
         if(checkArgs(maxRow, maxCol, guiMode)): #error message is printed when this is run
             board = readBoard(maxRow, maxCol)
             printBoard(board)
             #game_loop(board, gui_mode)
-        
+            
+            #type setup_board_test.txt|python SU28022351.py 10 10 0  
+#=======================================================================================================================       
