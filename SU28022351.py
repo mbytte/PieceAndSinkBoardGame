@@ -50,6 +50,11 @@ def checkArgs(maxRow, maxCol, guiMode):
         guiMode (str): The gamemode.
     """
     
+    #checking if the arguements are integers
+    if(not(maxRow.isdigit()) or not(maxCol.isdigit()) or not(guiMode.isdigit())):
+        stdio.writeln("ERROR: Illegal argument")
+        return False
+    
     #converting into integers
     maxRow = int(maxRow)
     maxCol = int(maxCol)
@@ -80,11 +85,11 @@ def checkNumArgs(numArgs):
         numArgs (int): The number of arguements given.
     """
     
-    if(numArgs != 3):
-        if(numArgs < 3):
-            stdio.writeln("ERROR: Too few arguements")
+    if(numArgs != 4):
+        if(numArgs < 4):
+            stdio.writeln("ERROR: Too few arguments")
         else:
-            stdio.writeln("ERROR: Too many arguements")
+            stdio.writeln("ERROR: Too many arguments")
         return False
     
     #if we get here then the number of arguements is correct
@@ -998,7 +1003,11 @@ def printBoard(board):
         
         #writing out the values of the array into their respective places
         for j in range(0, len(board[i])):
-            stdio.write(" " + board[i][j] + "|")
+            #ensuring that the board stays aligned according to the number of digits
+            if(len(board[i][j]) == 1):
+                stdio.write(" " + board[i][j] + "|")
+            else:
+                stdio.write(board[i][j] + "|")
         stdio.writeln()
         rowCount+=1
         
@@ -1038,6 +1047,13 @@ def gameLoop(board, guiMode):
         board (2D array of str): The game board
         gui_mode (bool): The mode of the game, True if gui_mode, False if terminal mode
     """
+    
+    #looping until game win/lose condition is met
+    
+    
+    #reading in the move
+    
+    
     # If implemented well, this function can be used for both terminal and GUI mode.
     # TODO: implement this function.
     # remove the following line when you add something to this function:
@@ -1053,14 +1069,17 @@ if __name__ == "__main__":
     # you start editing this file.
     
     #checking if there are enough arguements to begin the program
-    #number of arguements is correct
-    arguements = stdio.readLine().split(" ")
-    numArgs = len(arguements)
-    if(checkNumArgs(numArgs)): #error message is printed when this is run
+    #number of arguements is correct   
+    # arguements = stdio.readLine().split(" ")
+    # numArgs = len(arguements)
+    if(checkNumArgs(len(sys.argv))): #error message is printed when this is run
         #getting the arguements for the board size and the gamemode
-        maxRow = arguements[0]
-        maxCol = arguements[1]
-        guiMode = arguements[2]
+        # maxRow = arguements[0]
+        # maxCol = arguements[1]
+        # guiMode = arguements[2]
+        maxRow = sys.argv[1]
+        maxCol = sys.argv[2]
+        guiMode = sys.argv[3]
         
         #setting the global variables
         maxRowGlobal = maxRow
@@ -1068,9 +1087,11 @@ if __name__ == "__main__":
         
         #performing error checks to ensure the arguements are valid
         if(checkArgs(maxRow, maxCol, guiMode)): #error message is printed when this is run
-            board = readBoard(maxRow, maxCol)
-            printBoard(board)
-            #game_loop(board, gui_mode)
+            if(not stdio.isEmpty()):
+                #reading the board
+                board = readBoard(maxRow, maxCol)
+                printBoard(board)
+                #game_loop(board, gui_mode)
             
             #type setup_board_test.txt|python SU28022351.py 10 10 0  
 #=======================================================================================================================       
