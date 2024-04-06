@@ -29,6 +29,7 @@ import stdarray
 
 #GLOBALS================================================================================================================
 turn = 1 #keeps track of who's turn it is (odd = light and even = dark)
+movesLeft = 2 #keeps track of the number of moves made in a turn
 maxRowGlobal = None
 maxColGlobal = None
 guiModeGlobal = None
@@ -191,6 +192,7 @@ def checkMoveInput(row, col, direction, board):
     Checks the move input.
     Returns a boolean value.
     If any part of the move is invalid, an error message is printed and the function returns False.
+    NOTE: This function does not check if the move is possible or not. It only checks if the input is valid.
     
     Args:
         row (int): The row of the object to move
@@ -199,10 +201,34 @@ def checkMoveInput(row, col, direction, board):
         board (2D array of str): The game board
     """
     
+    #checking if the coordinates given are on the board
+    if(row < 0 or col < 0 or row >= len(board) or col >= len(board[0])):
+        stdio.writeln("ERROR: Field " + str(row) + " " + str(col) + " not on board")
+        return False
+    
     #checking if the direction is valid
     if(direction != "u" and direction != "d" and direction != "l" and direction != "r"):
         stdio.writeln("ERROR: Invalid direction")
         return False
+    
+    #checking if the field is empty
+    if(board[row][col] == " "):
+        stdio.writeln("ERROR: No piece on field " + str(row) + " " + str(col))
+        return False
+    
+    #checking if the piece belongs to the player whose move it is
+    if((turn % 2 == 1 and board[row][col].islower()) or (turn % 2 == 0 and board[row][col].isupper())):
+        stdio.writeln("ERROR: Piece does not belong to the correct player")
+        return False
+    
+    #checking if a 2x2x2 piece is being moved on the 2nd move of a player's turn
+    if(movesLeft == 1 and (board[row][col] == "D" or board[row][col] == "d")):
+        stdio.writeln("ERROR: Cannot move a 2x2x2 piece on the second move")
+        return False
+    
+    
+    #move input is valid
+    return True
     
 #-----------------------------------------------------------------------------------------------------------------------
 
@@ -748,10 +774,19 @@ def validateMove(row, col, direction, board):
 
 
 #MOVES=================================================================================================================
-#gets all the field coordinates that a piece occupies
 #NO IDEA IF THIS WORKS OR NOT BUT LETS GO WITH NO BUT HAVE HOPE
 #MIGHT NOT NEED THIS
 def getPieceFields(row, col, board):
+    """
+    Gets all the field coordinates that a piece occupies
+    Returns a 2D array of numbers
+    
+    Args:
+        row (int) : the row of the piece
+        col (int): the col of the piece
+        board (2D array of str): The game board
+    """
+    
     #variables
     coords = []
     value = (row*len(board[0][:]))+col
@@ -824,9 +859,17 @@ def generateAllMoves(board):
 
 
 #BOARD=================================================================================================================
-#reads the arguements given on the first start up of the game and returns them as an array
 #WORKS BUT NEEDS ERROR CHECKS 
 def readBoard(maxRow, maxCol):
+    """
+    Reads the arguements given on the first start of the game
+    Returns an array, board, with all the given pieces
+    
+    Args:
+        maxRow (int): The maximum number of rows in the board
+        maxCol (int): The maximum number of columns in the board
+    """
+    
     #variables
     maxRow = int(maxRow)
     maxCol = int(maxCol)
@@ -837,14 +880,22 @@ def readBoard(maxRow, maxCol):
     
     #running a loop until the next string gotten is #
     while(piece != "#"):
+        #checks if the object type given is viable
+        if(piece != "s" and piece != "l" and piece != "d" and piece != "x"):
+            stdio.writeln("ERROR: Invalid object type " + piece)
+        
         #gets the coordinates of a specific piece and adds it to the board
-        if(piece == "s"):
+        elif(piece == "s"):
             #getting the size
             sinkSize = stdio.readInt()
             
             #getting the coordinates
             sinkRow = stdio.readInt()
             sinkCol = stdio.readInt()
+            
+            #checking if the size is valid
+            if(sinkSize != 1 and sinkSize != 2):
+                stdio.writeln("ERROR: Invalid piece type " + str(sinkSize))
             
             #checking if the sink is in the correct position
             if(checkSinkRange(maxRow, maxCol, sinkRow, sinkCol)): #error message is printed in the function
@@ -867,6 +918,9 @@ def readBoard(maxRow, maxCol):
             pieceRow = stdio.readInt()
             pieceCol = stdio.readInt()
             
+            if(pieceType != "a" and pieceType != "b" and pieceType != "c" and pieceType != "d"):
+                stdio.writeln("ERROR: Invalid piece type " + pieceType)
+            
             if(checkPieceRange(maxRow, maxCol, pieceRow, pieceCol)): #error message is printed in the function
                 if(pieceType == "d"): #NEED TO VALIDATE IF A PIECE OF THIS SIZE CAN FIT WITHIN THESE COORDINATES
                     #ADD CHECK TO CHECK IF THERE IS ANOTHER PIECE OCCUPYING THE FIELD OR NOT ALREADY
@@ -887,6 +941,9 @@ def readBoard(maxRow, maxCol):
             #getting the coordinates
             pieceRow = stdio.readInt()
             pieceCol = stdio.readInt()
+            
+            if(pieceType != "a" and pieceType != "b" and pieceType != "c" and pieceType != "d"):
+                stdio.writeln("ERROR: Invalid piece type " + pieceType)
             
             if(checkPieceRange(maxRow, maxCol, pieceRow, pieceCol)): #error message is printed in the function
                 if(pieceType == "d"): #NEED TO VALIDATE IF A PIECE OF THIS SIZE CAN FIT WITHIN THESE COORDINATES
@@ -911,6 +968,13 @@ def readBoard(maxRow, maxCol):
 #prints the board and everything in it in a grid-like model
 #WORKS
 def printBoard(board):
+    """
+    Prints the board and everything in it in a grid-like model
+    
+    Args:
+        board (2D array of str): The game board
+    """
+    
     #getting the number of columns and rows in the board
     columnMax = len(board[0][:])
     
