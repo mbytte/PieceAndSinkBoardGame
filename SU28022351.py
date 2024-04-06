@@ -31,6 +31,7 @@ import stdarray
 turn = 1 #keeps track of who's turn it is (odd = light and even = dark)
 maxRowGlobal = None
 maxColGlobal = None
+guiModeGlobal = None
 #=======================================================================================================================
 
 
@@ -39,8 +40,12 @@ maxColGlobal = None
 #returns false if arguements are not viable
 #WORKS
 def checkArgs(maxRow, maxCol, guiMode):
+    #converting into integers
+    maxRow = int(maxRow)
+    maxCol = int(maxCol)
+    
     #checking if the board is valid
-    if(not(int(maxRow) > 7 and int(maxRow) < 11) or not(int(maxCol) > 7 and int(maxCol) < 11)):
+    if(not(maxRow > 7 and maxRow < 11) or not(maxCol > 7 and maxCol < 11)):
         stdio.writeln("ERROR: Illegal argument")
         return False
     
@@ -57,8 +62,8 @@ def checkArgs(maxRow, maxCol, guiMode):
 #checking if there are either too few or too many arguements
 #WORKS
 def checkNumArgs(numArgs):
-    if(numArgs != 4):
-        if(numArgs < 4):
+    if(numArgs != 3):
+        if(numArgs < 3):
             stdio.writeln("ERROR: Too few arguements")
         else:
             stdio.writeln("ERROR: Too many arguements")
@@ -634,11 +639,13 @@ if __name__ == "__main__":
     
     #checking if there are enough arguements to begin the program
     #number of arguements is correct
-    if(checkNumArgs(len(sys.argv))): #error message is printed when this is run
+    arguements = stdio.readLine().split(" ")
+    numArgs = len(arguements)
+    if(checkNumArgs(numArgs)): #error message is printed when this is run
         #getting the arguements for the board size and the gamemode
-        maxRow = sys.argv[1]
-        maxCol = sys.argv[2]
-        guiMode = sys.argv[3]
+        maxRow = arguements[0]
+        maxCol = arguements[1]
+        guiMode = arguements[2]
         
         #setting the global variables
         maxRowGlobal = maxRow
