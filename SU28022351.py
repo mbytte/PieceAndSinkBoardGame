@@ -381,7 +381,7 @@ def validateMove(row, col, direction, board):
             value = (row*len(board[0][:])) + col 
             #the value associated with the piece will only ever be down or to the right of the coordinates given because the coordinates are the bottom left of the piece
             #down
-            if(board[row-1][col] == str(value)):
+            if(board[row+1][col] == str(value)):
                 lyingDirection = "vertical"
             #right
             else:
@@ -394,25 +394,25 @@ def validateMove(row, col, direction, board):
                 #moving down
                 if(direction == "d"):
                     #checking if the board border is reached or not
-                    if(row - 2 >= 0): #only need to check for one field because the piece will flip over into its upright position
-                        if((board[row - 2][col] == " ") or (board[row - 2][col] == "s")):
+                    if(row - 1 >= 0): #only need to check for one field because the piece will flip over into its upright position
+                        if((board[row - 1][col] == " ") or (board[row - 1][col] == "s")):
                             return True
                         else:
                             fieldOccupied = True
                             #getting the field that is occupied
-                            occupiedField = (row-2, col)
+                            occupiedField = (row-1, col)
                     else:
                         moveBeyondBoard = True
                 #moving up
                 elif(direction == "u"):
                     #checking if the board border is reached or not
-                    if(row + 1 <= len(board) - 1): #only one field for the same reason as the up direction but needs to be +2 to account for the field the piece is in under its coords
-                        if((board[row + 1][col] == " ") or (board[row + 1][col] == "s")):
+                    if(row + 2 <= len(board) - 1): #only one field for the same reason as the up direction but needs to be +2 to account for the field the piece is in under its coords
+                        if((board[row + 2][col] == " ") or (board[row + 2][col] == "s")):
                             return True
                         else:
                             fieldOccupied = True
                             #getting the field that is occupied
-                            occupiedField = (row+1, col)
+                            occupiedField = (row+2, col)
                     else:
                         moveBeyondBoard = True                       
                 #moving left
@@ -590,25 +590,25 @@ def validateMove(row, col, direction, board):
                 #moving up
                 if(direction == "u"):
                     #checking if the board border is reached or not
-                    if(row + 1 >= len(board) - 1): #only need to check for one field because the piece will flip over into its upright position
-                        if((board[row + 1][col] == " ") or (board[row + 1][col] == "s")):
+                    if(row + 3 >= len(board) - 1): #only need to check for one field because the piece will flip over into its upright position
+                        if((board[row + 3][col] == " ") or (board[row + 3][col] == "s")):
                             return True
                         else:
                             fieldOccupied = True
                             #getting the field that is occupied
-                            occupiedField = (row+1, col)
+                            occupiedField = (row+3, col)
                     else:
                         moveBeyondBoard = True                        
                 #moving down
                 elif(direction == "d"):
                     #checking if the board border is reached or not
-                    if(row - 3 <= 0): #only one field for the same reason as the up direction but needs to be +2 to account for the field the piece is in under its coords
-                        if((board[row - 3][col] == " ") or (board[row - 3][col] == "s")):
+                    if(row - 1 <= 0): #only one field for the same reason as the up direction but needs to be +2 to account for the field the piece is in under its coords
+                        if((board[row - 1][col] == " ") or (board[row - 1][col] == "s")):
                             return True
                         else:
                             fieldOccupied = True
                             #getting the field that is occupied
-                            occupiedField = (row-3, col)
+                            occupiedField = (row-1, col)
                     else:
                         moveBeyondBoard = True
                 #moving left
@@ -706,13 +706,13 @@ def validateMove(row, col, direction, board):
         #moving up
         if(direction == "u"):
             #checking if the board border is reached or not
-            if(row + 2 >= len(board) - 1):
-                if((board[row + 1][col] == " " and board[row + 2][col] == " " and board[row + 1][col + 1] == " " and board[row + 2][col + 1] == " ") or (board[row + 1][col] == "s" and board[row + 2][col] == "s" and board[row + 1][col + 1] == "s" and board[row + 2][col + 1] == "s")):
+            if(row + 3 >= len(board) - 1):
+                if((board[row + 2][col] == " " and board[row + 3][col] == " " and board[row + 2][col + 1] == " " and board[row + 3][col + 1] == " ") or (board[row + 2][col] == "s" and board[row + 3][col] == "s" and board[row + 2][col + 1] == "s" and board[row + 3][col + 1] == "s")):
                     return True
                 else:
                     fieldOccupied = True
                     #getting the field that is occupied
-                    for i in range(row+2, row, -1):
+                    for i in range(row+3, row+1, -1):
                         for j in range(col, col+2):
                             if(board[i][j] != " " and board[i][j] != "s"):
                                 occupiedField = (i,j)
@@ -722,13 +722,13 @@ def validateMove(row, col, direction, board):
         #moving down
         elif(direction == "d"):
             #checking if the board border is reached or not
-            if(row - 3 <= 0):
-                if((board[row - 2][col] == " " and board[row - 3][col] == " " and board[row - 2][col + 1] == " " and board[row - 3][col + 1] == " ") or (board[row - 2][col] == "s" and board[row - 3][col] == "s" and board[row - 2][col + 1] == "s" and board[row - 3][col + 1] == "s")):
+            if(row - 2 <= 0):
+                if((board[row - 1][col] == " " and board[row - 2][col] == " " and board[row - 1][col + 1] == " " and board[row - 2][col + 1] == " ") or (board[row - 1][col] == "s" and board[row - 2][col] == "s" and board[row - 1][col + 1] == "s" and board[row - 2][col + 1] == "s")):
                     return True
                 else:
                     fieldOccupied = True
                     #getting the field that is occupied
-                    for i in range(row-2, row-4):
+                    for i in range(row-1, row-3, -1):
                         for j in range(col, col+2):
                             if(board[i][j] != " " and board[i][j] != "s"):
                                 occupiedField = (i,j)
@@ -739,12 +739,12 @@ def validateMove(row, col, direction, board):
         elif(direction == "l"):
             #checking if the board border is reached or not
             if(col - 2 >= 0):
-                if((board[row][col - 1] == " " and board[row][col - 2] == " " and board[row - 1][col - 1] == " " and board[row - 1][col - 2] == " ") or (board[row][col - 1] == "s" and board[row][col - 2] == "s" and board[row - 1][col - 1] == "s" and board[row - 1][col - 2] == "s")):
+                if((board[row][col - 1] == " " and board[row][col - 2] == " " and board[row + 1][col - 1] == " " and board[row + 1][col - 2] == " ") or (board[row][col - 1] == "s" and board[row][col - 2] == "s" and board[row + 1][col - 1] == "s" and board[row + 1][col - 2] == "s")):
                     return True
                 else:
                     fieldOccupied = True
                     #getting the field that is occupied
-                    for i in range(row, row-2, -1):
+                    for i in range(row+1, row-1, -1):
                         for j in range(col-2, col):
                             if(board[i][j] != " " and board[i][j] != "s"):
                                 occupiedField = (i,j)
@@ -755,12 +755,12 @@ def validateMove(row, col, direction, board):
         elif(direction == "r"):
             #checking if the board border is reached or not
             if(col + 3 <= len(board[0]) - 1):
-                if((board[row][col + 2] == " " and board[row][col + 3] == " " and board[row - 1][col + 2] == " " and board[row - 1][col + 3] == " ") or (board[row][col + 2] == "s" and board[row][col + 3] == "s" and board[row - 1][col + 2] == "s" and board[row - 1][col + 3] == "s")):
+                if((board[row][col + 2] == " " and board[row][col + 3] == " " and board[row + 1][col + 2] == " " and board[row + 1][col + 3] == " ") or (board[row][col + 2] == "s" and board[row][col + 3] == "s" and board[row + 1][col + 2] == "s" and board[row + 1][col + 3] == "s")):
                     return True
                 else:
                     fieldOccupied = True
                     #getting the field that is occupied
-                    for i in range(row, row-2, -1):
+                    for i in range(row+1, row-1, -1):
                         for j in range(col+2, col+4):
                             if(board[i][j] != " " and board[i][j] != "s"):
                                 occupiedField = (i,j)
@@ -864,7 +864,7 @@ def generateAllMoves(board):
 
 
 #BOARD=================================================================================================================
-#WORKS BUT NEEDS ERROR CHECKS 
+#WORKS
 def readBoard(maxRow, maxCol):
     """
     Reads the arguements given on the first start of the game
@@ -898,22 +898,45 @@ def readBoard(maxRow, maxCol):
             sinkRow = stdio.readInt()
             sinkCol = stdio.readInt()
             
+            #checking if the field is occupied
+            if(board[sinkRow][sinkCol] != " "):
+                stdio.writeln("ERROR: Field " + str(sinkRow) + " " + str(sinkCol) + " not free")
+            
             #checking if the size is valid
             if(sinkSize != 1 and sinkSize != 2):
                 stdio.writeln("ERROR: Invalid piece type " + str(sinkSize))
-                
             
-            #checking if the sink is in the correct position
+            #checking if the sink is in the correct range for sink setup 
             if(checkSinkRange(maxRow, maxCol, sinkRow, sinkCol)): #error message is printed in the function
                 #checking if the piece is 1x1 or 2x2
                 if(sinkSize == 1): #piece is 1x1
                     board[sinkRow][sinkCol] = "s"
+                    
                 else:  #piece is 2x2
-                    #NEED TO VALIDATE IF A SINK OF THIS SIZE CAN FIT IN THE BOARD
-                    board[sinkRow][sinkCol] = "s"
-                    board[sinkRow][sinkCol + 1] = "s"
-                    board[sinkRow + 1][sinkCol] = "s"
-                    board[sinkRow + 1][sinkCol + 1] = "s"
+                    #checking if the sink can fit on the board
+                    if(sinkRow + 1 > maxRow - 1 or sinkCol + 1 > maxCol - 1):
+                        stdio.writeln("ERROR: Sink in the wrong position")
+                        
+                    #checking if the extra fields needed for this sink size are in the correct position
+                    elif((sinkRow + 1 < 3 or sinkRow + 1 >= maxRow - 3) and (sinkCol + 1 < 3 or sinkCol + 1 >= maxCol - 3)):
+                        #checking if there is a sink already in the extra fields
+                        #there is
+                        if(board[sinkRow][sinkCol + 1] != " " or board[sinkRow + 1][sinkCol] != " " or board[sinkRow + 1][sinkCol + 1] != " "):
+                            #getting the field that is occupied
+                            for i in range(sinkRow+1, sinkRow-1, -1):
+                                for j in range(sinkCol, sinkCol+2):
+                                    if(board[i][j] != " "):
+                                        stdio.writeln("ERROR: Field " + str(i) + " " + str(j) + " not free")
+                                        break
+                        #there isn't        
+                        else:                        
+                            board[sinkRow][sinkCol] = "s"
+                            board[sinkRow][sinkCol + 1] = "s"
+                            board[sinkRow + 1][sinkCol] = "s"
+                            board[sinkRow + 1][sinkCol + 1] = "s"
+                    #sink in the wrong position
+                    else:
+                        stdio.writeln("ERROR: Sink in the wrong position")
                 
                 
         elif(piece == "l"):
@@ -924,20 +947,37 @@ def readBoard(maxRow, maxCol):
             pieceRow = stdio.readInt()
             pieceCol = stdio.readInt()
             
-            if(pieceType != "a" and pieceType != "b" and pieceType != "c" and pieceType != "d"):
-                stdio.writeln("ERROR: Invalid piece type " + pieceType)
-                
+            #checking if the field is occupied
+            if(board[pieceRow][pieceCol] != " "):
+                stdio.writeln("ERROR: Field " + str(pieceRow) + " " + str(pieceCol) + " not free")
             
+            #checking if the piece type is valid
+            if(pieceType != "a" and pieceType != "b" and pieceType != "c" and pieceType != "d"):
+                stdio.writeln("ERROR: Invalid piece type " + pieceType)               
+            
+            #checking that the field is in a valid position for piece setup
             if(checkPieceRange(maxRow, maxCol, pieceRow, pieceCol)): #error message is printed in the function
-                if(pieceType == "d"): #NEED TO VALIDATE IF A PIECE OF THIS SIZE CAN FIT WITHIN THESE COORDINATES
-                    #ADD CHECK TO CHECK IF THERE IS ANOTHER PIECE OCCUPYING THE FIELD OR NOT ALREADY
-                    value = (pieceRow*maxCol)+pieceCol
-                    board[pieceRow][pieceCol] = "d"
-                    board[pieceRow][pieceCol + 1] = str(value)
-                    board[pieceRow + 1][pieceCol] = str(value)
-                    board[pieceRow + 1][pieceCol + 1] = str(value)
+                if(pieceType == "d"): 
+                    #checking if there is a piece already in the extra fields
+                    if(board[pieceRow][pieceCol + 1] != " " or board[pieceRow + 1][pieceCol] != " " or board[pieceRow + 1][pieceCol + 1] != " "):
+                        #getting the field that is occupied
+                        for i in range(pieceRow+1, pieceRow-1, -1):
+                            for j in range(pieceCol, pieceCol+2):
+                                if(board[i][j] != " "):
+                                    stdio.writeln("ERROR: Field " + str(i) + " " + str(j) + " not free")
+                                    break #only need to find the first field that is occupied
+                                
+                    #checking if the piece can fit according to the standards of setup
+                    elif(pieceRow + 1 < maxRow - 3 and pieceCol + 1 <= maxCol - 3):
+                        value = (pieceRow*maxCol)+pieceCol
+                        board[pieceRow][pieceCol] = "d"
+                        board[pieceRow][pieceCol + 1] = str(value)
+                        board[pieceRow + 1][pieceCol] = str(value)
+                        board[pieceRow + 1][pieceCol + 1] = str(value)
+                    else:
+                        stdio.writeln("ERROR: Piece in the wrong position")
+                        
                 else: #all the other pieces will be upright anyways
-                    #ADD CHECK TO CHECK IF THERE IS ANOTHER PIECE OCCUPYING THE FIELD OR NOT ALREADY
                     board[pieceRow][pieceCol] = pieceType
                     
             
@@ -949,20 +989,36 @@ def readBoard(maxRow, maxCol):
             pieceRow = stdio.readInt()
             pieceCol = stdio.readInt()
             
-            if(pieceType != "a" and pieceType != "b" and pieceType != "c" and pieceType != "d"):
-                stdio.writeln("ERROR: Invalid piece type " + pieceType)
-                
+            #checking if the field is occupied
+            if(board[pieceRow][pieceCol] != " "):
+                stdio.writeln("ERROR: Field " + str(pieceRow) + " " + str(pieceCol) + " not free")
             
+            #checking if the piece type is valid
+            if(pieceType != "a" and pieceType != "b" and pieceType != "c" and pieceType != "d"):
+                stdio.writeln("ERROR: Invalid piece type " + pieceType)     
+            
+            #checking that the field is in a valid position for piece setup
             if(checkPieceRange(maxRow, maxCol, pieceRow, pieceCol)): #error message is printed in the function
-                if(pieceType == "d"): #NEED TO VALIDATE IF A PIECE OF THIS SIZE CAN FIT WITHIN THESE COORDINATES
-                    #ADD CHECK TO CHECK IF THERE IS ANOTHER PIECE OCCUPYING THE FIELD OR NOT ALREADY
-                    value = (pieceRow*maxCol)+pieceCol
-                    board[pieceRow][pieceCol] = "D"
-                    board[pieceRow][pieceCol + 1] = str(value)
-                    board[pieceRow + 1][pieceCol] = str(value)
-                    board[pieceRow + 1][pieceCol + 1] = str(value)
+                if(pieceType == "d"): 
+                    #checking if there is a piece already in the extra fields
+                    if(board[pieceRow][pieceCol + 1] != " " or board[pieceRow + 1][pieceCol] != " " or board[pieceRow + 1][pieceCol + 1] != " "):
+                        #getting the field that is occupied
+                        for i in range(pieceRow+1, pieceRow-1, -1):
+                            for j in range(pieceCol, pieceCol+2):
+                                if(board[i][j] != " "):
+                                    stdio.writeln("ERROR: Field " + str(i) + " " + str(j) + " not free")
+                                    break #only need to find the first field that is occupied
+                                
+                    #checking if the piece can fit according to the standards of setup
+                    elif(pieceRow + 1 < maxRow - 3 and pieceCol + 1 <= maxCol - 3):
+                        value = (pieceRow*maxCol)+pieceCol
+                        board[pieceRow][pieceCol] = "D"
+                        board[pieceRow][pieceCol + 1] = str(value)
+                        board[pieceRow + 1][pieceCol] = str(value)
+                        board[pieceRow + 1][pieceCol + 1] = str(value)
+                    else:
+                        stdio.writeln("ERROR: Piece in the wrong position")
                 else: #all the other pieces will be upright anyways
-                    #ADD CHECK TO CHECK IF THERE IS ANOTHER PIECE OCCUPYING THE FIELD OR NOT ALREADY
                     board[pieceRow][pieceCol] = pieceType.upper()
                     
         #getting the value of the next piece
