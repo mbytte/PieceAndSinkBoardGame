@@ -30,9 +30,8 @@ import stdarray
 #GLOBALS================================================================================================================
 turn = 1 #keeps track of who's turn it is (odd = light and even = dark)
 movesLeft = 2 #keeps track of the number of moves made in a turn
-maxRowGlobal = None
-maxColGlobal = None
-guiModeGlobal = None
+lightPoints = 0
+darkPoints = 0
 #=======================================================================================================================
 
 
@@ -775,6 +774,35 @@ def validateMove(row, col, direction, board):
         stdio.writeln("ERROR: Cannot move beyond the board")
     if(fieldOccupied):
         stdio.writeln("ERROR: Field " + str(occupiedField[0]) + " " + str(occupiedField[1]) + " not free")
+        
+#-----------------------------------------------------------------------------------------------------------------------
+
+def continueGame():
+    """"
+    Checks if any of the conditions for the game to continue are met
+    Returns a boolean value
+    Will print a message depending on what condition is met
+    """
+    
+    #a player has won with points
+    if(lightPoints >= 4 or darkPoints >= 4):
+        if(lightPoints >= 4):
+            stdio.writeln("Light wins!")
+        else:
+            stdio.writeln("Dark wins!")
+        
+        return False
+    
+    #a player has lost by having no more moves
+    #NEED TO STILL COMPLETE
+    # if(light has no moves or dark has no moves):
+    #     if(light has no moves):
+    #         stdio.writeln("Light loses")
+    #     else:
+    #         stdio.writeln("Dark loses")
+        
+    #     return False
+    
 #=======================================================================================================================
 
 
@@ -1093,6 +1121,7 @@ def drawGame(board):
 
 
 #GAME==================================================================================================================
+#DONT KNOW IF IT WORKS BUT IT SHOULD HEY
 def gameLoop(board, guiMode):
     """
     Executes the main game loop including
@@ -1108,9 +1137,19 @@ def gameLoop(board, guiMode):
     """
     
     #looping until game win/lose condition is met
-    
-    
-    #reading in the move
+    while(continueGame()):
+        #reading in the move
+        fieldRow = stdio.readInt()
+        fieldCol = stdio.readInt()
+        direction = stdio.readString()
+        
+        #checking if the move is valid
+        if(validateMove(fieldRow, fieldCol, direction, board)):
+            #doing the move
+            doMove(fieldRow, fieldCol, direction, board, scores, guiMode)
+            
+            #printing the board
+            printBoard(board)
     
     
     # If implemented well, this function can be used for both terminal and GUI mode.
