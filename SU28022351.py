@@ -28,8 +28,15 @@ import stdarray
 
 
 #GLOBALS================================================================================================================
-turn = 1 #keeps track of who's turn it is (odd = light and even = dark)
-movesLeft = 2 #keeps track of the number of moves made in a turn
+global turn #keeps track of who's turn it is (odd = light and even = dark)
+global movesLeft#keeps track of the number of moves made in a turn
+movesLeft = 2
+global lightPoints
+global darkPoints
+
+#initializing the global variables
+turn = 1
+
 lightPoints = 0
 darkPoints = 0
 #=======================================================================================================================
@@ -112,7 +119,7 @@ def checkSinkRange(maxRow, maxCol, sinkRow, sinkCol):
     
     #a sink is valid if it is in the outer 3 rows/columns in the table
     #field provided is not on the board
-    if((maxRow == sinkRow or maxCol == sinkCol) or ((sinkRow < 0) or (sinkCol < 0)) or ((sinkRow >= maxRow) or (sinkCol >= maxCol))):
+    if(((sinkRow < 0) or (sinkCol < 0)) or ((sinkRow >= maxRow) or (sinkCol >= maxCol))):
         stdio.writeln("ERROR: Field " + str(sinkRow) + " " + str(sinkCol) + " not on board")
         return False
     
@@ -139,6 +146,10 @@ def checkPieceRange(maxRow, maxCol, pieceRow, pieceCol):
         pieceRow (int): The row of the piece.
         pieceCol (int): The column of the piece.
     """
+    #field provided is not on the board
+    if(((pieceRow < 0) or (pieceCol < 0)) or ((pieceRow >= maxRow) or (pieceCol >= maxCol))):
+        stdio.writeln("ERROR: Field " + str(pieceRow) + " " + str(pieceCol) + " not on board")
+        return False
     
     #piece is in the correct position if it is NOT in the first and last three columns and rows
     if((pieceRow < maxRow and pieceRow >= maxRow - 3) or (pieceRow < 3 and pieceRow >= 0) or (pieceCol < maxCol and pieceCol >= maxCol - 3) or (pieceCol < 3 and pieceCol >= 0)):
@@ -221,7 +232,7 @@ def checkMoveInput(row, col, direction, board):
         return False
     
     #checking if the piece belongs to the player whose move it is
-    if((turn % 2 == 1 and board[row][col].islower()) or (turn % 2 == 0 and board[row][col].isupper())):
+    if((turn % 2 != 0 and board[row][col].isupper()) or (turn % 2 == 0 and board[row][col].islower())):
         stdio.writeln("ERROR: Piece does not belong to the correct player")
         return False
     
@@ -803,6 +814,9 @@ def continueGame():
         
     #     return False
     
+    #game continues
+    return True
+    
 #=======================================================================================================================
 
 
@@ -851,6 +865,39 @@ def doMove(row, col, direction, board, scores, guiMode):
         scores (array of int): The current scores for each player
         gui_mode (bool): The mode of the game, True if gui_mode, False if terminal mode
     """
+    movesLeft = movesLeft
+    
+    #validating if the move is possible
+    if(validateMove(row, col, direction, board)):
+        if(movesLeft > 0):           
+            #getting the piece type
+            pieceType = board[row][col]
+            
+            #moving a 1x1 piece
+            if(pieceType == "a" or pieceType == "A"):
+                if(direction == "d"):
+                    #moving the piece
+                    board[row][col] = " "
+                    board[row-1][col] = pieceType
+                elif(direction == "u"):
+                    #moving the piece
+                    board[row][col] = " "
+                    board[row+1][col] = pieceType
+                elif(direction == "l"):
+                    #moving the piece
+                    board[row][col] = " "
+                    board[row][col-1] = pieceType
+                elif(direction == "r"):
+                    #moving the piece
+                    board[row][col] = " "
+                    board[row][col+1] = pieceType
+                
+                #decreasing the moves left
+                movesLeft -= 1
+        elif(movesLeft == 0):
+            #no more moves left for that player 
+            turn += 1
+            movesLeft += 2
     
     #direction
         #getting the direction it lies in
@@ -926,16 +973,16 @@ def readBoard(maxRow, maxCol):
             sinkRow = stdio.readInt()
             sinkCol = stdio.readInt()
             
-            #checking if the field is occupied
-            if(board[sinkRow][sinkCol] != " "):
-                stdio.writeln("ERROR: Field " + str(sinkRow) + " " + str(sinkCol) + " not free")
-            
-            #checking if the size is valid
-            if(sinkSize != 1 and sinkSize != 2):
-                stdio.writeln("ERROR: Invalid piece type " + str(sinkSize))
-            
             #checking if the sink is in the correct range for sink setup 
             if(checkSinkRange(maxRow, maxCol, sinkRow, sinkCol)): #error message is printed in the function
+                #checking if the field is occupied
+                if(board[sinkRow][sinkCol] != " "):
+                    stdio.writeln("ERROR: Field " + str(sinkRow) + " " + str(sinkCol) + " not free")
+                
+                #checking if the size is valid
+                if(sinkSize != 1 and sinkSize != 2):
+                    stdio.writeln("ERROR: Invalid piece type " + str(sinkSize))
+                
                 #checking if the piece is 1x1 or 2x2
                 if(sinkSize == 1): #piece is 1x1
                     board[sinkRow][sinkCol] = "s"
@@ -974,17 +1021,17 @@ def readBoard(maxRow, maxCol):
             #getting the coordinates
             pieceRow = stdio.readInt()
             pieceCol = stdio.readInt()
-            
-            #checking if the field is occupied
-            if(board[pieceRow][pieceCol] != " "):
-                stdio.writeln("ERROR: Field " + str(pieceRow) + " " + str(pieceCol) + " not free")
-            
-            #checking if the piece type is valid
-            if(pieceType != "a" and pieceType != "b" and pieceType != "c" and pieceType != "d"):
-                stdio.writeln("ERROR: Invalid piece type " + pieceType)               
-            
+
             #checking that the field is in a valid position for piece setup
             if(checkPieceRange(maxRow, maxCol, pieceRow, pieceCol)): #error message is printed in the function
+                #checking if the field is occupied
+                if(board[pieceRow][pieceCol] != " "):
+                    stdio.writeln("ERROR: Field " + str(pieceRow) + " " + str(pieceCol) + " not free")
+                
+                #checking if the piece type is valid
+                if(pieceType != "a" and pieceType != "b" and pieceType != "c" and pieceType != "d"):
+                    stdio.writeln("ERROR: Invalid piece type " + pieceType)    
+                    
                 if(pieceType == "d"): 
                     #checking if there is a piece already in the extra fields
                     if(board[pieceRow][pieceCol + 1] != " " or board[pieceRow + 1][pieceCol] != " " or board[pieceRow + 1][pieceCol + 1] != " "):
@@ -1015,18 +1062,18 @@ def readBoard(maxRow, maxCol):
             
             #getting the coordinates
             pieceRow = stdio.readInt()
-            pieceCol = stdio.readInt()
-            
-            #checking if the field is occupied
-            if(board[pieceRow][pieceCol] != " "):
-                stdio.writeln("ERROR: Field " + str(pieceRow) + " " + str(pieceCol) + " not free")
-            
-            #checking if the piece type is valid
-            if(pieceType != "a" and pieceType != "b" and pieceType != "c" and pieceType != "d"):
-                stdio.writeln("ERROR: Invalid piece type " + pieceType)     
+            pieceCol = stdio.readInt()   
             
             #checking that the field is in a valid position for piece setup
             if(checkPieceRange(maxRow, maxCol, pieceRow, pieceCol)): #error message is printed in the function
+                #checking if the field is occupied
+                if(board[pieceRow][pieceCol] != " "):
+                    stdio.writeln("ERROR: Field " + str(pieceRow) + " " + str(pieceCol) + " not free")
+                
+                #checking if the piece type is valid
+                if(pieceType != "a" and pieceType != "b" and pieceType != "c" and pieceType != "d"):
+                    stdio.writeln("ERROR: Invalid piece type " + pieceType)  
+                
                 if(pieceType == "d"): 
                     #checking if there is a piece already in the extra fields
                     if(board[pieceRow][pieceCol + 1] != " " or board[pieceRow + 1][pieceCol] != " " or board[pieceRow + 1][pieceCol + 1] != " "):
@@ -1134,7 +1181,8 @@ def gameLoop(board, guiMode):
     Args:
         board (2D array of str): The game board
         gui_mode (bool): The mode of the game, True if gui_mode, False if terminal mode
-    """
+    """    
+    stdio.writeln(continueGame())
     
     #looping until game win/lose condition is met
     while(continueGame()):
@@ -1142,11 +1190,14 @@ def gameLoop(board, guiMode):
         fieldRow = stdio.readInt()
         fieldCol = stdio.readInt()
         direction = stdio.readString()
+        scores = [lightPoints, darkPoints] #light, dark
         
         #checking if the move is valid
-        if(validateMove(fieldRow, fieldCol, direction, board)):
+        if(checkMoveInput(fieldRow, fieldCol, direction, board)):
             #doing the move
             doMove(fieldRow, fieldCol, direction, board, scores, guiMode)
+            
+            stdio.writeln("Here")
             
             #printing the board
             printBoard(board)
@@ -1184,7 +1235,7 @@ if __name__ == "__main__":
                 #reading the board
                 board = readBoard(maxRow, maxCol)
                 printBoard(board)
-                #game_loop(board, gui_mode)
+                gameLoop(board, guiMode)
             
             #type setup_board_test.txt|python SU28022351.py 10 10 0  
 #=======================================================================================================================       
