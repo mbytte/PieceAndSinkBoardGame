@@ -28,17 +28,17 @@ import stdarray
 
 
 #GLOBALS================================================================================================================
-global turn #keeps track of who's turn it is (odd = light and even = dark)
-global movesLeft#keeps track of the number of moves made in a turn
-movesLeft = 2
-global lightPoints
-global darkPoints
-
-#initializing the global variables
+#setting game variables 
+global movesLeft #number of moves left for the player
+movesLeft = 2  
+global turn #the player's turn (odd for light, even for dark)
 turn = 1
-
+global lightPoints
 lightPoints = 0
+global darkPoints
 darkPoints = 0
+global prevMove #the previous move made
+prevMove = None
 #=======================================================================================================================
 
 
@@ -48,7 +48,7 @@ def checkArgs(maxRow, maxCol, guiMode):
     """
     Validates the arguements given for the board and gamemode.
     Returns a boolean value.
-    If false, an error message is printed.
+    If false, an error message is printed
     
     Args:
         maxRow (int): The maximum number of rows on the board.
@@ -121,7 +121,7 @@ def checkSinkRange(maxRow, maxCol, sinkRow, sinkCol):
     #field provided is not on the board
     if(((sinkRow < 0) or (sinkCol < 0)) or ((sinkRow >= maxRow) or (sinkCol >= maxCol))):
         stdio.writeln("ERROR: Field " + str(sinkRow) + " " + str(sinkCol) + " not on board")
-        return False
+        sys.exit()
     
     #valid if it is in a correct row OR a correct column
     elif((sinkRow < maxRow and sinkRow >= maxRow - 3) or (sinkRow < 3 and sinkRow >= 0) or (sinkCol < maxCol and sinkCol >= maxCol - 3) or (sinkCol < 3 and sinkCol >= 0)):
@@ -129,7 +129,7 @@ def checkSinkRange(maxRow, maxCol, sinkRow, sinkCol):
             
     #if we get here, the sink is in the wrong position
     stdio.writeln("ERROR: Sink in the wrong position")
-    return False
+    sys.exit()
 
 #-----------------------------------------------------------------------------------------------------------------------  
 
@@ -149,12 +149,12 @@ def checkPieceRange(maxRow, maxCol, pieceRow, pieceCol):
     #field provided is not on the board
     if(((pieceRow < 0) or (pieceCol < 0)) or ((pieceRow >= maxRow) or (pieceCol >= maxCol))):
         stdio.writeln("ERROR: Field " + str(pieceRow) + " " + str(pieceCol) + " not on board")
-        return False
+        sys.exit()
     
     #piece is in the correct position if it is NOT in the first and last three columns and rows
     if((pieceRow < maxRow and pieceRow >= maxRow - 3) or (pieceRow < 3 and pieceRow >= 0) or (pieceCol < maxCol and pieceCol >= maxCol - 3) or (pieceCol < 3 and pieceCol >= 0)):
-        stdio.writeln("ERROR: Piece in the wrong position for piece " + str(pieceRow) + " " + str(pieceCol))
-        return False
+        stdio.writeln("ERROR: Piece in the wrong position")
+        sys.exit()
     
     #if we get here, the piece is in the correct position
     return True
@@ -219,27 +219,27 @@ def checkMoveInput(row, col, direction, board):
     #checking if the coordinates given are on the board
     if(row < 0 or col < 0 or row >= len(board) or col >= len(board[0])):
         stdio.writeln("ERROR: Field " + str(row) + " " + str(col) + " not on board")
-        return False
+        sys.exit()
     
     #checking if the direction is valid
     if(direction != "u" and direction != "d" and direction != "l" and direction != "r"):
-        stdio.writeln("ERROR: Invalid direction")
-        return False
+        stdio.writeln("ERROR: Invalid direction " + direction)
+        sys.exit()
     
     #checking if the field is empty
     if(board[row][col] == " "):
         stdio.writeln("ERROR: No piece on field " + str(row) + " " + str(col))
-        return False
+        sys.exit()
     
     #checking if the piece belongs to the player whose move it is
     if((turn % 2 != 0 and board[row][col].isupper()) or (turn % 2 == 0 and board[row][col].islower())):
         stdio.writeln("ERROR: Piece does not belong to the correct player")
-        return False
+        sys.exit()
     
     #checking if a 2x2x2 piece is being moved on the 2nd move of a player's turn
     if(movesLeft == 1 and (board[row][col] == "D" or board[row][col] == "d")):
         stdio.writeln("ERROR: Cannot move a 2x2x2 piece on the second move")
-        return False
+        sys.exit()
     
     
     #move input is valid
@@ -289,6 +289,7 @@ def validateMove(row, col, direction, board):
                     return True
                 else:
                     fieldOccupied = True
+                    stdio.writeln("here")
                     #getting the field that is occupied
                     occupiedField = (row + 1, col)
             else:
@@ -716,7 +717,7 @@ def validateMove(row, col, direction, board):
         #moving up
         if(direction == "u"):
             #checking if the board border is reached or not
-            if(row + 3 >= len(board) - 1):
+            if(row + 3 <= len(board) - 1):
                 if((board[row + 2][col] == " " and board[row + 3][col] == " " and board[row + 2][col + 1] == " " and board[row + 3][col + 1] == " ") or (board[row + 2][col] == "s" and board[row + 3][col] == "s" and board[row + 2][col + 1] == "s" and board[row + 3][col + 1] == "s")):
                     return True
                 else:
@@ -728,6 +729,7 @@ def validateMove(row, col, direction, board):
                                 occupiedField = (i,j)
                                 break #only need to find the first field that is occupied
             else:
+                stdio.writeln("Here")
                 moveBeyondBoard = True
         #moving down
         elif(direction == "d"):
@@ -783,17 +785,25 @@ def validateMove(row, col, direction, board):
     #move is invalid
     if(moveBeyondBoard):
         stdio.writeln("ERROR: Cannot move beyond the board")
+        sys.exit()
     if(fieldOccupied):
         stdio.writeln("ERROR: Field " + str(occupiedField[0]) + " " + str(occupiedField[1]) + " not free")
+        sys.exit()
         
 #-----------------------------------------------------------------------------------------------------------------------
 
-def continueGame():
+def continueGame(board):
     """"
     Checks if any of the conditions for the game to continue are met
     Returns a boolean value
     Will print a message depending on what condition is met
     """
+    global lightPoints
+    global darkPoints
+    
+    #partial game -> no more moves left
+    if(stdio.isEmpty()):
+        return False 
     
     #a player has won with points
     if(lightPoints >= 4 or darkPoints >= 4):
@@ -805,14 +815,13 @@ def continueGame():
         return False
     
     #a player has lost by having no more moves
-    #NEED TO STILL COMPLETE
-    # if(light has no moves or dark has no moves):
-    #     if(light has no moves):
-    #         stdio.writeln("Light loses")
-    #     else:
-    #         stdio.writeln("Dark loses")
+    if((turn%2 > 0 and getAllMoves(board, "light") == []) or (turn%2 == 0 and getAllMoves(board, "dark") == [])):
+        if(turn%2 > 0):
+            stdio.writeln("Light loses")
+        else:
+            stdio.writeln("Dark loses")
         
-    #     return False
+        return False
     
     #game continues
     return True
@@ -853,7 +862,7 @@ def getPieceFields(row, col, board):
 
 #-----------------------------------------------------------------------------------------------------------------------  
 
-def doMove(row, col, direction, board, scores, guiMode):
+def doMove(row, col, direction, board, guiMode):
     """
     Executes the given move on the board.
 
@@ -865,7 +874,11 @@ def doMove(row, col, direction, board, scores, guiMode):
         scores (array of int): The current scores for each player
         gui_mode (bool): The mode of the game, True if gui_mode, False if terminal mode
     """
-    movesLeft = movesLeft
+    global turn
+    global movesLeft
+    global prevMove
+    global lightPoints
+    global darkPoints
     
     #validating if the move is possible
     if(validateMove(row, col, direction, board)):
@@ -876,28 +889,80 @@ def doMove(row, col, direction, board, scores, guiMode):
             #moving a 1x1 piece
             if(pieceType == "a" or pieceType == "A"):
                 if(direction == "d"):
-                    #moving the piece
-                    board[row][col] = " "
-                    board[row-1][col] = pieceType
+                    #checking if the player is moving back to the same spot (will be the opposite to the move here)
+                    if(prevMove != "u " + str(row-1) + " " + str(col)):
+                        #moving the piece
+                        if(board[row-1][col] != "s"):
+                            board[row][col] = " "
+                            board[row-1][col] = pieceType
+                            prevMove = "d " + str(row) + " " + str(col)
+                        else: #field is a sink
+                            board[row][col] = " "
+                            if(turn%2 == 0): #dark scores
+                                darkPoints += 1
+                            else: #light scores
+                                lightPoints += 1
+                    else: #player is moving back to the same spot
+                        stdio.writeln("ERROR: Piece cannot be returned to starting position")
+                        sys.exit()
                 elif(direction == "u"):
-                    #moving the piece
-                    board[row][col] = " "
-                    board[row+1][col] = pieceType
+                    if(prevMove != "d " + str(row+1) + " " + str(col)):
+                        #moving the piece
+                        if(board[row+1][col] != "s"):
+                            board[row][col] = " "
+                            board[row+1][col] = pieceType
+                            prevMove = "u " + str(row) + " " + str(col)
+                        else: #field is a sink
+                            board[row][col] = " "
+                            if(turn%2 == 0):
+                                darkPoints += 1
+                            else:
+                                lightPoints += 1
+                    else: #player is moving back to the same spot
+                        stdio.writeln("ERROR: Piece cannot be returned to starting position")
+                        sys.exit()
                 elif(direction == "l"):
-                    #moving the piece
-                    board[row][col] = " "
-                    board[row][col-1] = pieceType
+                    if(prevMove != "r " + str(row) + " " + str(col-1)):
+                        if(board[row][col-1] != "s"):
+                            #moving the piece
+                            board[row][col] = " "
+                            board[row][col-1] = pieceType
+                            prevMove = "l " + str(row) + " " + str(col)
+                        else: #field is a sink
+                            board[row][col] = " "
+                            if(turn%2 == 0):
+                                darkPoints += 1
+                            else:
+                                lightPoints += 1
+                    else: #player is moving back to the same spot
+                        stdio.writeln("ERROR: Piece cannot be returned to starting position")
+                        sys.exit()
                 elif(direction == "r"):
-                    #moving the piece
-                    board[row][col] = " "
-                    board[row][col+1] = pieceType
+                    if(prevMove != "l " + str(row) + " " + str(col+1)):
+                        #moving the piece
+                        if(board[row][col+1] != "s"):
+                            board[row][col] = " "
+                            board[row][col+1] = pieceType
+                            prevMove = "r " + str(row) + " " + str(col)
+                        else: #piece is a sink
+                            board[row][col] = " "
+                            if(turn%2 == 0):
+                                darkPoints += 1
+                            else:
+                                lightPoints += 1
+                    else: #player is moving back to the same spot
+                        stdio.writeln("ERROR: Piece cannot be returned to starting position")
+                        sys.exit()
                 
                 #decreasing the moves left
                 movesLeft -= 1
-        elif(movesLeft == 0):
+                
+        #changing the turn
+        if(movesLeft == 0):
             #no more moves left for that player 
             turn += 1
             movesLeft += 2
+            prevMove = None
     
     #direction
         #getting the direction it lies in
@@ -920,21 +985,50 @@ def doMove(row, col, direction, board, scores, guiMode):
 
 #-----------------------------------------------------------------------------------------------------------------------  
 
-def generateAllMoves(board):
+def getAllMoves(board, player):
     """
     Generates a list of all moves (valid or invalid) that could potentially be
     played on the current board.
 
     Args:
         board (2D array of str): The game board
+        player (str): The player whose moves are being generated
 
     Returns:
         array of moves: The moves that could be played on the given board
     """
-    # When used with the validate_move function, this function is useful for
-    # checking whether a player has a valid move left to play.
-    # remove the following line when you add something to this function:
-    pass
+    #variables
+    moves = []
+    
+    #light player
+    if(player == "light"):
+        #looping through the array to find all the light pieces and check if they have any moves
+        for i in range(0, len(board)):
+            for j in range(0, len(board[i])):
+                if(board[i][j].islower()):
+                    if(validateMove(i, j, "u", board)):
+                        moves.append("u " + str(i) + " " + str(j))
+                    elif(validateMove(i, j, "d", board)):
+                        moves.append("d " + str(i) + " " + str(j))
+                    elif(validateMove(i, j, "l", board)):
+                        moves.append("l " + str(i) + " " + str(j))
+                    elif(validateMove(i, j, "r", board)):
+                        moves.append("r " + str(i) + " " + str(j))
+    else:
+        #looping through the array to find all the dark pieces and check if they have any moves
+        for i in range(0, len(board)):
+            for j in range(0, len(board[i])):
+                if(board[i][j].isupper()):
+                    if(validateMove(i, j, "u", board)):
+                        moves.append("u " + str(i) + " " + str(j))
+                    elif(validateMove(i, j, "d", board)):
+                        moves.append("d " + str(i) + " " + str(j))
+                    elif(validateMove(i, j, "l", board)):
+                        moves.append("l " + str(i) + " " + str(j))
+                    elif(validateMove(i, j, "r", board)):
+                        moves.append("r " + str(i) + " " + str(j))
+                        
+    return moves
 #=======================================================================================================================
 
 
@@ -963,6 +1057,7 @@ def readBoard(maxRow, maxCol):
         #checks if the object type given is viable
         if(piece != "s" and piece != "l" and piece != "d" and piece != "x"):
             stdio.writeln("ERROR: Invalid object type " + piece)
+            sys.exit()
         
         #gets the coordinates of a specific piece and adds it to the board
         elif(piece == "s"):
@@ -978,19 +1073,27 @@ def readBoard(maxRow, maxCol):
                 #checking if the field is occupied
                 if(board[sinkRow][sinkCol] != " "):
                     stdio.writeln("ERROR: Field " + str(sinkRow) + " " + str(sinkCol) + " not free")
+                    sys.exit()
                 
                 #checking if the size is valid
                 if(sinkSize != 1 and sinkSize != 2):
                     stdio.writeln("ERROR: Invalid piece type " + str(sinkSize))
+                    sys.exit()
                 
                 #checking if the piece is 1x1 or 2x2
                 if(sinkSize == 1): #piece is 1x1
-                    board[sinkRow][sinkCol] = "s"
+                    #checking if there are any sinks around this sink
+                    if(board[sinkRow-1][sinkCol] == "s" or board[sinkRow+1][sinkCol] == "s" or board[sinkRow][sinkCol-1] == "s" or board[sinkRow][sinkCol+1] == "s"):
+                        stdio.writeln("ERROR: Sink cannot be next to another sink")
+                        sys.exit()
+                    else: #no sinks around this sink
+                        board[sinkRow][sinkCol] = "s"
                     
                 else:  #piece is 2x2
                     #checking if the sink can fit on the board
                     if(sinkRow + 1 > maxRow - 1 or sinkCol + 1 > maxCol - 1):
                         stdio.writeln("ERROR: Sink in the wrong position")
+                        sys.exit()
                         
                     #checking if the extra fields needed for this sink size are in the correct position
                     elif((sinkRow + 1 < 3 or sinkRow + 1 >= maxRow - 3) and (sinkCol + 1 < 3 or sinkCol + 1 >= maxCol - 3)):
@@ -1002,9 +1105,57 @@ def readBoard(maxRow, maxCol):
                                 for j in range(sinkCol, sinkCol+2):
                                     if(board[i][j] != " "):
                                         stdio.writeln("ERROR: Field " + str(i) + " " + str(j) + " not free")
-                                        break
+                                        sys.exit()
                         #there isn't        
-                        else:                        
+                        else:  
+                            #checking if there are any sinks around this sink
+                            #sink isn't on any borders
+                            if(sinkRow + 1 < maxRow-1 and sinkCol + 1 < maxCol-1 and sinkRow > 0 and sinkCol > 0):
+                                if(board[sinkRow+2][sinkCol] == "s" or board[sinkRow+2][sinkCol+1] == "s" or board[sinkRow+1][sinkCol-1] == "s" or board[sinkRow+1][sinkCol+2] == "s" or board[sinkRow][sinkCol-1] == "s" or board[sinkRow][sinkCol+2] == "s" or board[sinkRow-1][sinkCol] == "s" or board[sinkRow-1][sinkCol+1] == "s"):
+                                    stdio.writeln("ERROR: Sink cannot be next to another sink")
+                                    sys.exit()
+                            #sink top-left corner
+                            elif(sinkCol == 0 and sinkRow+1 == maxRow-1):
+                                if(board[sinkRow-1][sinkCol] == "s" or board[sinkRow-1][sinkCol+1] == "s" or board[sinkRow][sinkCol+2] == "s" or board[sinkRow+1][sinkCol+2] == "s"):
+                                    stdio.writeln("ERROR: Sink cannot be next to another sink")
+                                    sys.exit()
+                            #sink top-right corner
+                            elif(sinkCol+1 == maxCol-1 and sinkRow+1 == maxRow-1):
+                                if(board[sinkRow-1][sinkCol+1] == "s" or board[sinkRow-1][sinkCol] == "s" or board[sinkRow][sinkCol-1] == "s" or board[sinkRow+1][sinkCol-1] == "s"):
+                                    stdio.writeln("ERROR: Sink cannot be next to another sink")
+                                    sys.exit()
+                            #sink bottom-right corner
+                            elif(sinkCol+1 == maxCol-1 and sinkRow == 0):
+                                if(board[sinkRow][sinkCol-1] == "s" or board[sinkRow+1][sinkCol-1] == "s" or board[sinkRow+2][sinkCol] == "s" or board[sinkRow+2][sinkCol+1] == "s"):
+                                    stdio.writeln("ERROR: Sink cannot be next to another sink")
+                                    sys.exit()
+                            #sink bottom-left corner
+                            elif(sinkCol == 0 and sinkRow == 0):
+                                if(board[sinkRow+2][sinkCol] == "s" or board[sinkRow+2][sinkCol+1] == "s" or board[sinkRow+1][sinkCol+2] == "s" or board[sinkRow][sinkCol+2] == "s"):
+                                    stdio.writeln("ERROR: Sink cannot be next to another sink")
+                                    sys.exit()                                       
+                            #sink on the top border
+                            elif(sinkRow+1 == maxRow-1):
+                                if(board[sinkRow+1][sinkCol-1] == "s" or board[sinkRow][sinkCol-1] == "s" or board[sinkRow-1][sinkCol] == "s" or board[sinkRow-1][sinkCol+1] == "s" or board[sinkRow][sinkCol+2] == "s" or board[sinkRow+1][sinkCol+2] == "s"):
+                                    stdio.writeln("ERROR: Sink cannot be next to another sink")
+                                    sys.exit()
+                            #sink on the bottom border
+                            elif(sinkRow == 0):
+                                if(board[sinkRow][sinkCol-1] == "s" or board[sinkRow+1][sinkCol-1] == "s" or board[sinkRow+2][sinkCol] == "s" or board[sinkRow+2][sinkCol+1] == "s" or board[sinkRow+1][sinkCol+2] == "s" or board[sinkRow][sinkCol+2] == "s"):
+                                    stdio.writeln("ERROR: Sink cannot be next to another sink")
+                                    sys.exit()
+                            #sink on the left border
+                            elif(sinkCol == 0): 
+                                if(board[sinkRow+2][sinkCol] == "s" or board[sinkRow+2][sinkCol+1] == "s" or board[sinkRow+1][sinkCol+2] == "s" or board[sinkRow][sinkCol+2] == "s" or board[sinkRow-1][sinkCol+1] == "s" or board[sinkRow-1][sinkCol] == "s"):
+                                    stdio.writeln("ERROR: Sink cannot be next to another sink")
+                                    sys.exit()
+                            #sink on the right border
+                            elif(sinkCol == maxCol-1): 
+                                if(board[sinkRow-1][sinkCol+1] == "s" or board[sinkRow-1][sinkCol] == "s" or board[sinkRow][sinkCol-1] == "s" or board[sinkRow+1][sinkCol-1] == "s" or board[sinkRow+2][sinkCol] == "s" or board[sinkRow+2][sinkCol+1] == "s"):
+                                    stdio.writeln("ERROR: Sink cannot be next to another sink")
+                                    sys.exit()
+                                
+                            #no sinks around this sink                     
                             board[sinkRow][sinkCol] = "s"
                             board[sinkRow][sinkCol + 1] = "s"
                             board[sinkRow + 1][sinkCol] = "s"
@@ -1012,6 +1163,7 @@ def readBoard(maxRow, maxCol):
                     #sink in the wrong position
                     else:
                         stdio.writeln("ERROR: Sink in the wrong position")
+                        sys.exit()
                 
                 
         elif(piece == "l"):
@@ -1027,10 +1179,12 @@ def readBoard(maxRow, maxCol):
                 #checking if the field is occupied
                 if(board[pieceRow][pieceCol] != " "):
                     stdio.writeln("ERROR: Field " + str(pieceRow) + " " + str(pieceCol) + " not free")
+                    sys.exit()
                 
                 #checking if the piece type is valid
                 if(pieceType != "a" and pieceType != "b" and pieceType != "c" and pieceType != "d"):
-                    stdio.writeln("ERROR: Invalid piece type " + pieceType)    
+                    stdio.writeln("ERROR: Invalid piece type " + pieceType)  
+                    sys.exit()  
                     
                 if(pieceType == "d"): 
                     #checking if there is a piece already in the extra fields
@@ -1040,7 +1194,7 @@ def readBoard(maxRow, maxCol):
                             for j in range(pieceCol, pieceCol+2):
                                 if(board[i][j] != " "):
                                     stdio.writeln("ERROR: Field " + str(i) + " " + str(j) + " not free")
-                                    break #only need to find the first field that is occupied
+                                    sys.exit() #only need to find the first field that is occupied
                                 
                     #checking if the piece can fit according to the standards of setup
                     elif(pieceRow + 1 < maxRow - 3 and pieceCol + 1 <= maxCol - 3):
@@ -1051,6 +1205,7 @@ def readBoard(maxRow, maxCol):
                         board[pieceRow + 1][pieceCol + 1] = str(value)
                     else:
                         stdio.writeln("ERROR: Piece in the wrong position")
+                        sys.exit()
                         
                 else: #all the other pieces will be upright anyways
                     board[pieceRow][pieceCol] = pieceType
@@ -1069,10 +1224,12 @@ def readBoard(maxRow, maxCol):
                 #checking if the field is occupied
                 if(board[pieceRow][pieceCol] != " "):
                     stdio.writeln("ERROR: Field " + str(pieceRow) + " " + str(pieceCol) + " not free")
+                    sys.exit()
                 
                 #checking if the piece type is valid
                 if(pieceType != "a" and pieceType != "b" and pieceType != "c" and pieceType != "d"):
                     stdio.writeln("ERROR: Invalid piece type " + pieceType)  
+                    sys.exit()
                 
                 if(pieceType == "d"): 
                     #checking if there is a piece already in the extra fields
@@ -1082,7 +1239,7 @@ def readBoard(maxRow, maxCol):
                             for j in range(pieceCol, pieceCol+2):
                                 if(board[i][j] != " "):
                                     stdio.writeln("ERROR: Field " + str(i) + " " + str(j) + " not free")
-                                    break #only need to find the first field that is occupied
+                                    sys.exit() #only need to find the first field that is occupied
                                 
                     #checking if the piece can fit according to the standards of setup
                     elif(pieceRow + 1 < maxRow - 3 and pieceCol + 1 <= maxCol - 3):
@@ -1093,6 +1250,7 @@ def readBoard(maxRow, maxCol):
                         board[pieceRow + 1][pieceCol + 1] = str(value)
                     else:
                         stdio.writeln("ERROR: Piece in the wrong position")
+                        sys.exit()
                 else: #all the other pieces will be upright anyways
                     board[pieceRow][pieceCol] = pieceType.upper()
                     
@@ -1182,31 +1340,33 @@ def gameLoop(board, guiMode):
         board (2D array of str): The game board
         gui_mode (bool): The mode of the game, True if gui_mode, False if terminal mode
     """    
-    stdio.writeln(continueGame())
+    
+    #referencing game variables 
+    global movesLeft
+    global turn
+    global lightPoints
+    global darkPoints
     
     #looping until game win/lose condition is met
-    while(continueGame()):
+    #while(continueGame()):
+    
+    while(continueGame(board)):
+        #if(not stdio.isEmpty()): #NEEDS TO CHANGE(maybe)
         #reading in the move
         fieldRow = stdio.readInt()
         fieldCol = stdio.readInt()
         direction = stdio.readString()
-        scores = [lightPoints, darkPoints] #light, dark
+        # stdio.writeln(str(fieldRow) + " " + str(fieldCol) + " " + direction)
         
         #checking if the move is valid
         if(checkMoveInput(fieldRow, fieldCol, direction, board)):
             #doing the move
-            doMove(fieldRow, fieldCol, direction, board, scores, guiMode)
-            
-            stdio.writeln("Here")
+            doMove(fieldRow, fieldCol, direction, board, guiMode)
             
             #printing the board
             printBoard(board)
-    
-    
-    # If implemented well, this function can be used for both terminal and GUI mode.
-    # TODO: implement this function.
-    # remove the following line when you add something to this function:
-    pass
+    #printing any possible wins that may have occured after the input stream has ended
+    continueGame(board)
 #=======================================================================================================================
 
 
