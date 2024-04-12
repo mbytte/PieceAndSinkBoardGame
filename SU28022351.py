@@ -39,6 +39,8 @@ global darkPoints
 darkPoints = 0
 global prevMove #the previous move made
 prevMove = None
+global gettingAllMoves #indicates whether the program is collecting all the possible moves for a player 
+gettingAllMoves = False #will be used to stop error messages from being printed in validateMove (just want to get the moves)
 #=======================================================================================================================
 
 
@@ -289,7 +291,6 @@ def validateMove(row, col, direction, board):
                     return True
                 else:
                     fieldOccupied = True
-                    stdio.writeln("here")
                     #getting the field that is occupied
                     occupiedField = (row + 1, col)
             else:
@@ -783,10 +784,10 @@ def validateMove(row, col, direction, board):
                 
                 
     #move is invalid
-    if(moveBeyondBoard):
+    if(moveBeyondBoard and not gettingAllMoves):
         stdio.writeln("ERROR: Cannot move beyond the board")
         sys.exit()
-    if(fieldOccupied):
+    if(fieldOccupied and not gettingAllMoves):
         stdio.writeln("ERROR: Field " + str(occupiedField[0]) + " " + str(occupiedField[1]) + " not free")
         sys.exit()
         
@@ -800,28 +801,35 @@ def continueGame(board):
     """
     global lightPoints
     global darkPoints
-    
-    #partial game -> no more moves left
-    if(stdio.isEmpty()):
-        return False 
+    global gettingAllMoves
     
     #a player has won with points
     if(lightPoints >= 4 or darkPoints >= 4):
         if(lightPoints >= 4):
             stdio.writeln("Light wins!")
+            sys.exit()
         else:
             stdio.writeln("Dark wins!")
+            sys.exit()
         
         return False
     
+    #partial game -> no more moves left
+    if(stdio.isEmpty()):
+        return False 
+    
     #a player has lost by having no more moves
+    gettingAllMoves = True
     if((turn%2 > 0 and getAllMoves(board, "light") == []) or (turn%2 == 0 and getAllMoves(board, "dark") == [])):
         if(turn%2 > 0):
             stdio.writeln("Light loses")
+            sys.exit()
         else:
             stdio.writeln("Dark loses")
+            sys.exit()
         
         return False
+    gettingAllMoves = False
     
     #game continues
     return True
@@ -963,7 +971,7 @@ def doMove(row, col, direction, board, guiMode):
             turn += 1
             movesLeft += 2
             prevMove = None
-    
+        
     #direction
         #getting the direction it lies in
         #NEEDED FOR MOVE FUNCTION AND NOT FOR THIS FUNCTION 
@@ -999,6 +1007,7 @@ def getAllMoves(board, player):
     """
     #variables
     moves = []
+    
     
     #light player
     if(player == "light"):
@@ -1345,17 +1354,22 @@ def gameLoop(board, guiMode):
     global movesLeft
     global turn
     global lightPoints
-    global darkPoints
+    global darkPoints  
+    
+    #checking if the board is already empty --> means light loses
+    if(board == [[" "]*int(maxCol)]*int(maxRow)):
+        stdio.writeln("Light loses")
+        sys.exit()
     
     #looping until game win/lose condition is met
-    #while(continueGame()):
-    
     while(continueGame(board)):
         #if(not stdio.isEmpty()): #NEEDS TO CHANGE(maybe)
         #reading in the move
         fieldRow = stdio.readInt()
         fieldCol = stdio.readInt()
         direction = stdio.readString()
+        #stdio.writeln(direction)
+        #stdio.writeln(str(fieldRow) + " " + str(fieldCol) + " " + direction)
         # stdio.writeln(str(fieldRow) + " " + str(fieldCol) + " " + direction)
         
         #checking if the move is valid
@@ -1396,6 +1410,8 @@ if __name__ == "__main__":
                 board = readBoard(maxRow, maxCol)
                 printBoard(board)
                 gameLoop(board, guiMode)
-            
+            else:
+                stdio.writeln("Light loses")
             #type setup_board_test.txt|python SU28022351.py 10 10 0  
+            #type problem.txt|python SU28022351.py 10 10 0
 #=======================================================================================================================       
