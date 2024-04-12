@@ -1375,8 +1375,7 @@ def gameLoop(board, guiMode):
         #checking if the move is valid
         if(checkMoveInput(fieldRow, fieldCol, direction, board)):
             #doing the move
-            doMove(fieldRow, fieldCol, direction, board, guiMode)
-            
+            doMove(fieldRow, fieldCol, direction, board, guiMode)           
             #printing the board
             printBoard(board)
     #printing any possible wins that may have occured after the input stream has ended
