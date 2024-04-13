@@ -743,7 +743,7 @@ def validateMove(row, col, direction, board):
         #moving down
         elif(direction == "d"):
             #checking if the board border is reached or not
-            if(row - 2 <= 0):
+            if(row - 2 >= 0):
                 if((board[row - 1][col] == " " and board[row - 2][col] == " " and board[row - 1][col + 1] == " " and board[row - 2][col + 1] == " ") or (board[row - 1][col] == "s" and board[row - 2][col] == "s" and board[row - 1][col + 1] == "s" and board[row - 2][col + 1] == "s")):
                     return True
                 else:
@@ -1462,6 +1462,103 @@ def doMove(row, col, direction, board, guiMode):
                 #decreasing the moves left
                 movesLeft -= 1            
 
+            #moving a 2x2 piece
+            elif(pieceType == "d" or pieceType == "D"):
+                #moving up
+                if(direction == "u"):
+                    #moving the piece
+                    if(board[row+1][col] != "s"):
+                        value = ((row+2)*len(board[0][:])) + col
+                        board[row][col] = " "
+                        board[row+1][col] = " "
+                        board[row][col+1] = " "
+                        board[row+1][col+1] = " "
+                        board[row+2][col] = pieceType
+                        board[row+3][col+1] = str(value)
+                        board[row+2][col+1] = str(value)
+                        board[row+3][col] = str(value)
+                        prevMove = "u " + str(row) + " " + str(col)
+                    else: #field is a sink
+                        board[row][col] = " "
+                        board[row+1][col] = " "
+                        board[row][col+1] = " "
+                        board[row+1][col+1] = " "
+                        if(turn%2 == 0):
+                            darkPoints += 4
+                        else:
+                            lightPoints += 4
+                #moving down
+                elif(direction == "d"):
+                    #moving the piece
+                    if(board[row-1][col] != "s"):
+                        value = ((row-1)*len(board[0][:])) + col
+                        board[row][col] = " "
+                        board[row+1][col] = " "
+                        board[row][col+1] = " "
+                        board[row+1][col+1] = " "
+                        board[row-1][col] = pieceType
+                        board[row-2][col+1] = str(value)
+                        board[row-1][col+1] = str(value)
+                        board[row-2][col] = str(value)
+                        prevMove = "d " + str(row) + " " + str(col)
+                    else: #field is a sink
+                        board[row][col] = " "
+                        board[row+1][col] = " "
+                        board[row][col+1] = " "
+                        board[row+1][col+1] = " "
+                        if(turn%2 == 0):
+                            darkPoints += 4
+                        else:
+                            lightPoints += 4
+                #moving left
+                elif(direction == "l"):
+                    #moving the piece
+                    if(board[row][col-1] != "s"):
+                        value = (row*len(board[0][:])) + col-2
+                        board[row][col] = " "
+                        board[row+1][col] = " "
+                        board[row][col+1] = " "
+                        board[row+1][col+1] = " "
+                        board[row][col-2] = pieceType
+                        board[row+1][col-1] = str(value)
+                        board[row+1][col-2] = str(value)
+                        board[row][col-1] = str(value)
+                        prevMove = "l " + str(row) + " " + str(col)
+                    else:
+                        board[row][col] = " "
+                        board[row+1][col] = " "
+                        board[row][col+1] = " "
+                        board[row+1][col+1] = " "
+                        if(turn%2 == 0):
+                            darkPoints += 4
+                        else:
+                            lightPoints += 4
+                #moving right
+                elif(direction == "r"):
+                    #moving the piece
+                    if(board[row][col+1] != "s"):
+                        value = (row*len(board[0][:])) + col+2
+                        board[row][col] = " "
+                        board[row+1][col] = " "
+                        board[row][col+1] = " "
+                        board[row+1][col+1] = " "
+                        board[row][col+2] = pieceType
+                        board[row+1][col+3] = str(value)
+                        board[row+1][col+2] = str(value)
+                        board[row][col+3] = str(value)
+                        prevMove = "r " + str(row) + " " + str(col)
+                    else:
+                        board[row][col] = " "
+                        board[row+1][col] = " "
+                        board[row][col+1] = " "
+                        board[row+1][col+1] = " "
+                        if(turn%2 == 0):
+                            darkPoints += 4
+                        else:
+                            lightPoints += 4    
+                
+                #decreasing the moves left
+                movesLeft -= 2                           
 
         #changing the turn
         if(movesLeft == 0):
