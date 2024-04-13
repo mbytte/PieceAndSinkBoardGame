@@ -177,10 +177,22 @@ def checkPieceUpright(row, col, board):
     
     #the piece is upright if it occupies one field on the board
     #getting the number of columns and rows on the board
-    columnMax = len(board[0][:])
-    rowMax = len(board[:][0])
+    columnMax = len(board[0])
+    rowMax = len(board)
     #getting the value from the piece
     value = (row*columnMax)+col
+    isUpright = True
+    
+    # stdio.writeln(value)
+    # printBoard(board)
+    # stdio.writeln()
+    
+    # for i in range(0, rowMax):
+    #     for j in range (0, columnMax):
+    #         if(str(board[i][j]) == str(value)):
+    #             isUpright = False
+    # #if the code gets here then that means there is only one field occupied
+    # return isUpright
     
     #making sure that it is not the big piece (D or d)
     if(board[row][col] == 'A' or board[row][col] == 'a'):
@@ -195,7 +207,7 @@ def checkPieceUpright(row, col, board):
         #means that the field is not upright if so
         for i in range(0, rowMax):
             for j in range (0, columnMax):
-                if(board[i][j] == str(value)):
+                if(str(board[i][j]) == str(value)):
                     return False
         #if the code gets here then that means there is only one field occuped
         return True
@@ -349,7 +361,7 @@ def validateMove(row, col, direction, board):
                         fieldOccupied = True
                         #getting the field that is occupied
                         for i in range(row+2, row, -1):
-                            if(board[i][col] != " " and board[i][col] != "s"):
+                            if(board[i][col] != " "):
                                 occupiedField = (i, col)
                                 break #only need to find the first field that is occupied
                 else:
@@ -391,13 +403,12 @@ def validateMove(row, col, direction, board):
             value = (row*len(board[0][:])) + col 
             #the value associated with the piece will only ever be down or to the right of the coordinates given because the coordinates are the bottom left of the piece
             #down
-            if(board[row+1][col] == str(value)):
+            if(str(board[row+1][col]) == str(value)):
                 lyingDirection = "vertical"
             #right
             else:
                 lyingDirection = "horizontal"
-            
-            
+                        
             #checking if the spaces required for the piece to move are empty
             #vertical piece
             if(lyingDirection == "vertical"):
@@ -417,7 +428,7 @@ def validateMove(row, col, direction, board):
                 elif(direction == "u"):
                     #checking if the board border is reached or not
                     if(row + 2 <= len(board) - 1): #only one field for the same reason as the up direction but needs to be +2 to account for the field the piece is in under its coords
-                        if((board[row + 2][col] == " ") or (board[row + 2][col] == "s")):
+                        if((board[row + 2][col] == " ") or (str(board[row + 2][col]) == "s")):
                             return True
                         else:
                             fieldOccupied = True
@@ -972,10 +983,10 @@ def doMove(row, col, direction, board, guiMode):
                         if(prevMove != "u " + str(row-1) + " " + str(col)):
                             #moving the piece
                             if(board[row-1][col] != "s"): #only need to check for one because this is checked in validateMove
-                                value = ((row-1)*len(board[0][:])) + col
+                                value = ((row-2)*len(board[0][:])) + col
                                 board[row][col] = " "
-                                board[row-1][col] = pieceType
-                                board[row-2][col] = value
+                                board[row-1][col] = str(value) 
+                                board[row-2][col] = pieceType
                                 prevMove = "d " + str(row) + " " + str(col)
                             else: #moving into a sink
                                 board[row][col] = " "
@@ -993,7 +1004,7 @@ def doMove(row, col, direction, board, guiMode):
                                 value = ((row+1)*len(board[0][:])) + col
                                 board[row][col] = " "
                                 board[row+1][col] = pieceType
-                                board[row+2][col] = value
+                                board[row+2][col] = str(value)
                                 prevMove = "u " + str(row) + " " + str(col)
                             else: #moving into a sink
                                 board[row][col] = " "
@@ -1011,7 +1022,7 @@ def doMove(row, col, direction, board, guiMode):
                                 value = (row*len(board[0][:])) + col-2
                                 board[row][col] = " "
                                 board[row][col-2] = pieceType
-                                board[row][col-1] = value
+                                board[row][col-1] = str(value)
                                 prevMove = "l " + str(row) + " " + str(col)
                             else: #moving into a sink
                                 board[row][col] = " "
@@ -1029,7 +1040,7 @@ def doMove(row, col, direction, board, guiMode):
                                 value = (row*len(board[0][:])) + col+1
                                 board[row][col] = " "
                                 board[row][col+1] = pieceType
-                                board[row][col+2] = value
+                                board[row][col+2] = str(value)
                                 prevMove = "r " + str(row) + " " + str(col)
                             else: #moving into a sink
                                 board[row][col] = " "
@@ -1040,7 +1051,174 @@ def doMove(row, col, direction, board, guiMode):
                         else: #player is moving back to the same spot
                             stdio.writeln("ERROR: Piece cannot be returned to starting position")
                             sys.exit()
-                                    
+                else: #piece is on its side
+                    #finding the direction the piece is lying in
+                    lyingDirection = None
+                    value = (row*len(board[0][:])) + col
+                    #the value associated with the piece will only ever be down or to the right of the coordinates given because the coordinates are the bottom left of the piece
+                    #down
+                    if(str(board[row+1][col]) == str(value)):
+                        lyingDirection = "vertical"
+                    #right
+                    else:
+                        lyingDirection = "horizontal"
+                        
+                    #moving the piece
+                    if(lyingDirection == "vertical"):
+                        #moving up
+                        if(direction == "u"):
+                            if(prevMove != ("d " + str(row+2) + " " + str(col))):
+                                #moving the piece
+                                if(str(board[row+2][col]) != "s"):
+                                    board[row][col] = " "
+                                    board[row+1][col] = " "
+                                    board[row+2][col] = pieceType
+                                    prevMove = "u " + str(row) + " " + str(col)
+                                else: #piece is being sunk
+                                    board[row][col] = " "
+                                    if(turn%2 == 0):
+                                        darkPoints += 1
+                                    else:
+                                        lightPoints += 1
+                            else: #player is moving back to the same spot
+                                stdio.writeln("ERROR: Piece cannot be returned to starting position")
+                                sys.exit()  
+                        #moving down
+                        elif(direction == "d"):
+                            if(prevMove != ("u " + str(row-1) + " " + str(col))):
+                                #moving the piece
+                                if(board[row-1][col] != "s"):
+                                    board[row][col] = " "
+                                    board[row+1][col] = " "
+                                    board[row-1][col] = pieceType
+                                    prevMove = "d " + str(row) + " " + str(col)
+                                else:
+                                    board[row][col] = " "
+                                    if(turn%2 == 0):
+                                        darkPoints += 1
+                                    else:
+                                        lightPoints += 1
+                            else: #player is moving back to the same spot
+                                stdio.writeln("ERROR: Piece cannot be returned to starting position")
+                                sys.exit()
+                        #moving left
+                        elif(direction == "l"):
+                            if(prevMove != ("r " + str(row) + " " + str(col+1))):
+                                #moving the piece
+                                value = (row*len(board[0][:])) + col-1
+                                if(board[row][col-1] != "s"):
+                                    board[row][col] = " "
+                                    board[row+1][col] = " "
+                                    board[row][col-1] = pieceType
+                                    board[row+1][col-1] = str(value)
+                                    prevMove = "l " + str(row) + " " + str(col)
+                                else:
+                                    board[row][col] = " "
+                                    if(turn%2 == 0):
+                                        darkPoints += 1
+                                    else:
+                                        lightPoints += 1
+                            else:
+                                stdio.writeln("ERROR: Piece cannot be returned to starting position")
+                                sys.exit()
+                        #moving right
+                        elif(direction == "r"):
+                            if(prevMove != ("l " + str(row) + " " + str(col+1))):
+                                #moving the piece
+                                value = (row*len(board[0][:])) + col+1
+                                if(board[row][col+1] != "s"):
+                                    board[row][col] = " "
+                                    board[row+1][col] = " "
+                                    board[row][col+1] = pieceType
+                                    board[row+1][col+1] = str(value)
+                                    prevMove = "r " + str(row) + " " + str(col)
+                                else:
+                                    board[row][col] = " "
+                                    if(turn%2 == 0):
+                                        darkPoints += 1
+                                    else:
+                                        lightPoints += 1
+                            else:
+                                stdio.writeln("ERROR: Piece cannot be returned to starting position")
+                                sys.exit()
+                    else: #piece is horizontal
+                        #moving down
+                        if(direction == "d"):
+                            if(prevMove != ("u " + str(row-1) + " " + str(col))):
+                                #moving the piece
+                                if(board[row+1][col] != "s"):
+                                    value = ((row-1)*len(board[0][:])) + col
+                                    board[row][col] = " "
+                                    board[row][col+1] = " "
+                                    board[row-1][col] = pieceType
+                                    board[row-1][col+1] = str(value)
+                                    prevMove = "d " + str(row) + " " + str(col)
+                                else:
+                                    board[row][col] = " "
+                                    if(turn%2 == 0):
+                                        darkPoints += 1
+                                    else:
+                                        lightPoints += 1
+                            else:
+                                stdio.writeln("ERROR: Piece cannot be returned to starting position")
+                                sys.exit()
+                        #moving up
+                        elif(direction == "u"):
+                            if(prevMove != ("d " + str(row+1) + " " + str(col))):
+                                #moving the piece
+                                if(board[row-1][col] != "s"):
+                                    value = ((row+1)*len(board[0][:])) + col
+                                    board[row][col] = " "
+                                    board[row][col+1] = " "
+                                    board[row+1][col] = pieceType
+                                    board[row+1][col+1] = str(value)
+                                    prevMove = "u " + str(row) + " " + str(col)
+                                else:
+                                    board[row][col] = " "
+                                    if(turn%2 == 0):
+                                        darkPoints += 1
+                                    else:
+                                        lightPoints += 1
+                            else:
+                                stdio.writeln("ERROR: Piece cannot be returned to starting position")
+                                sys.exit()
+                        #moving left
+                        elif(direction == "l"):
+                            if(prevMove != ("r " + str(row) + " " + str(col-1))):
+                                #moving the piece
+                                if(board[row][col-1] != "s"):
+                                    board[row][col] = " "
+                                    board[row][col+1] = " "
+                                    board[row][col-1] = pieceType
+                                    prevMove = "l " + str(row) + " " + str(col)
+                                else:
+                                    board[row][col] = " "
+                                    if(turn%2 == 0):
+                                        darkPoints += 1
+                                    else:
+                                        lightPoints += 1
+                            else:
+                                stdio.writeln("ERROR: Piece cannot be returned to starting position")
+                                sys.exit()
+                        #moving right
+                        elif(direction == "r"):
+                            if(prevMove != ("l " + str(row) + " " + str(col+2))):
+                                #moving the piece
+                                if(board[row][col+2] != "s"):
+                                    board[row][col] = " "
+                                    board[row][col+1] = " "
+                                    board[row][col+2] = pieceType
+                                    prevMove = "r " + str(row) + " " + str(col)
+                                else:
+                                    board[row][col] = " "
+                                    if(turn%2 == 0):
+                                        darkPoints += 1
+                                    else:
+                                        lightPoints += 1
+                            else:
+                                stdio.writeln("ERROR: Piece cannot be returned to starting position")
+                                sys.exit()
+                                              
                             
                 
         #changing the turn
@@ -1092,28 +1270,32 @@ def getAllMoves(board, player):
         #looping through the array to find all the light pieces and check if they have any moves
         for i in range(0, len(board)):
             for j in range(0, len(board[i])):
-                if(board[i][j].islower()):
-                    if(validateMove(i, j, "u", board)):
-                        moves.append("u " + str(i) + " " + str(j))
-                    elif(validateMove(i, j, "d", board)):
-                        moves.append("d " + str(i) + " " + str(j))
-                    elif(validateMove(i, j, "l", board)):
-                        moves.append("l " + str(i) + " " + str(j))
-                    elif(validateMove(i, j, "r", board)):
-                        moves.append("r " + str(i) + " " + str(j))
+                #checking if the field contains an int
+                if(not str(board[i][j]).isnumeric()):
+                    if(board[i][j].islower()):
+                        if(validateMove(i, j, "u", board)):
+                            moves.append("u " + str(i) + " " + str(j))
+                        if(validateMove(i, j, "d", board)):
+                            moves.append("d " + str(i) + " " + str(j))
+                        if(validateMove(i, j, "l", board)):
+                            moves.append("l " + str(i) + " " + str(j))
+                        if(validateMove(i, j, "r", board)):
+                            moves.append("r " + str(i) + " " + str(j))
     else:
         #looping through the array to find all the dark pieces and check if they have any moves
         for i in range(0, len(board)):
             for j in range(0, len(board[i])):
-                if(board[i][j].isupper()):
-                    if(validateMove(i, j, "u", board)):
-                        moves.append("u " + str(i) + " " + str(j))
-                    elif(validateMove(i, j, "d", board)):
-                        moves.append("d " + str(i) + " " + str(j))
-                    elif(validateMove(i, j, "l", board)):
-                        moves.append("l " + str(i) + " " + str(j))
-                    elif(validateMove(i, j, "r", board)):
-                        moves.append("r " + str(i) + " " + str(j))
+                #checking if the field contains an int
+                if(not str(board[i][j]).isnumeric()):   
+                    if(board[i][j].isupper()):
+                        if(validateMove(i, j, "u", board)):
+                            moves.append("u " + str(i) + " " + str(j))
+                        elif(validateMove(i, j, "d", board)):
+                            moves.append("d " + str(i) + " " + str(j))
+                        elif(validateMove(i, j, "l", board)):
+                            moves.append("l " + str(i) + " " + str(j))
+                        elif(validateMove(i, j, "r", board)):
+                            moves.append("r " + str(i) + " " + str(j))
                         
     return moves
 #=======================================================================================================================
@@ -1183,7 +1365,7 @@ def readBoard(maxRow, maxCol):
                         sys.exit()
                         
                     #checking if the extra fields needed for this sink size are in the correct position
-                    elif((sinkRow + 1 < 3 or sinkRow + 1 >= maxRow - 3) and (sinkCol + 1 < 3 or sinkCol + 1 >= maxCol - 3)):
+                    elif((sinkRow + 1 < 3 or sinkRow + 1 >= maxRow - 3) or (sinkCol + 1 < 3 or sinkCol + 1 >= maxCol - 3)):
                         #checking if there is a sink already in the extra fields
                         #there is
                         if(board[sinkRow][sinkCol + 1] != " " or board[sinkRow + 1][sinkCol] != " " or board[sinkRow + 1][sinkCol + 1] != " "):
@@ -1248,9 +1430,10 @@ def readBoard(maxRow, maxCol):
                             board[sinkRow + 1][sinkCol] = "s"
                             board[sinkRow + 1][sinkCol + 1] = "s"
                     #sink in the wrong position
-                    else:
-                        stdio.writeln("ERROR: Sink in the wrong position")
-                        sys.exit()
+                    # else:
+                    #     stdio.writeln("HERE")
+                    #     stdio.writeln("ERROR: Sink in the wrong position")
+                    #     sys.exit()
                 
                 
         elif(piece == "l"):
