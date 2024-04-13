@@ -991,9 +991,9 @@ def doMove(row, col, direction, board, guiMode):
                             else: #moving into a sink
                                 board[row][col] = " "
                                 if(turn%2 == 0): #dark scores
-                                    darkPoints += 1
+                                    darkPoints += 2
                                 else: #light scores
-                                    lightPoints += 1        
+                                    lightPoints += 2        
                         else: #player is moving back to the same spot
                             stdio.writeln("ERROR: Piece cannot be returned to starting position")
                             sys.exit()
@@ -1009,9 +1009,9 @@ def doMove(row, col, direction, board, guiMode):
                             else: #moving into a sink
                                 board[row][col] = " "
                                 if(turn%2 == 0): #dark scores
-                                    darkPoints += 1
+                                    darkPoints += 2
                                 else: #light scores
-                                    lightPoints += 1
+                                    lightPoints += 2
                         else: #player is moving back to the same spot
                             stdio.writeln("ERROR: Piece cannot be returned to starting position")
                             sys.exit()
@@ -1027,9 +1027,9 @@ def doMove(row, col, direction, board, guiMode):
                             else: #moving into a sink
                                 board[row][col] = " "
                                 if(turn%2 == 0): #dark scores
-                                    darkPoints += 1
+                                    darkPoints += 2
                                 else: #light scores
-                                    lightPoints += 1
+                                    lightPoints += 2
                         else: #player is moving back to the same spot
                             stdio.writeln("ERROR: Piece cannot be returned to starting position")
                             sys.exit()
@@ -1045,12 +1045,13 @@ def doMove(row, col, direction, board, guiMode):
                             else: #moving into a sink
                                 board[row][col] = " "
                                 if(turn%2 == 0): #dark scores
-                                    darkPoints += 1
+                                    darkPoints += 2
                                 else: #light scores
-                                    lightPoints += 1
+                                    lightPoints += 2
                         else: #player is moving back to the same spot
                             stdio.writeln("ERROR: Piece cannot be returned to starting position")
                             sys.exit()
+                            
                 else: #piece is on its side
                     #finding the direction the piece is lying in
                     lyingDirection = None
@@ -1077,9 +1078,9 @@ def doMove(row, col, direction, board, guiMode):
                                 else: #piece is being sunk
                                     board[row][col] = " "
                                     if(turn%2 == 0):
-                                        darkPoints += 1
+                                        darkPoints += 2
                                     else:
-                                        lightPoints += 1
+                                        lightPoints += 2
                             else: #player is moving back to the same spot
                                 stdio.writeln("ERROR: Piece cannot be returned to starting position")
                                 sys.exit()  
@@ -1095,9 +1096,9 @@ def doMove(row, col, direction, board, guiMode):
                                 else:
                                     board[row][col] = " "
                                     if(turn%2 == 0):
-                                        darkPoints += 1
+                                        darkPoints += 2
                                     else:
-                                        lightPoints += 1
+                                        lightPoints += 2
                             else: #player is moving back to the same spot
                                 stdio.writeln("ERROR: Piece cannot be returned to starting position")
                                 sys.exit()
@@ -1115,9 +1116,9 @@ def doMove(row, col, direction, board, guiMode):
                                 else:
                                     board[row][col] = " "
                                     if(turn%2 == 0):
-                                        darkPoints += 1
+                                        darkPoints += 2
                                     else:
-                                        lightPoints += 1
+                                        lightPoints += 2
                             else:
                                 stdio.writeln("ERROR: Piece cannot be returned to starting position")
                                 sys.exit()
@@ -1135,9 +1136,9 @@ def doMove(row, col, direction, board, guiMode):
                                 else:
                                     board[row][col] = " "
                                     if(turn%2 == 0):
-                                        darkPoints += 1
+                                        darkPoints += 2
                                     else:
-                                        lightPoints += 1
+                                        lightPoints += 2
                             else:
                                 stdio.writeln("ERROR: Piece cannot be returned to starting position")
                                 sys.exit()
@@ -1156,9 +1157,9 @@ def doMove(row, col, direction, board, guiMode):
                                 else:
                                     board[row][col] = " "
                                     if(turn%2 == 0):
-                                        darkPoints += 1
+                                        darkPoints += 2
                                     else:
-                                        lightPoints += 1
+                                        lightPoints += 2
                             else:
                                 stdio.writeln("ERROR: Piece cannot be returned to starting position")
                                 sys.exit()
@@ -1176,9 +1177,9 @@ def doMove(row, col, direction, board, guiMode):
                                 else:
                                     board[row][col] = " "
                                     if(turn%2 == 0):
-                                        darkPoints += 1
+                                        darkPoints += 2
                                     else:
-                                        lightPoints += 1
+                                        lightPoints += 2
                             else:
                                 stdio.writeln("ERROR: Piece cannot be returned to starting position")
                                 sys.exit()
@@ -1194,9 +1195,9 @@ def doMove(row, col, direction, board, guiMode):
                                 else:
                                     board[row][col] = " "
                                     if(turn%2 == 0):
-                                        darkPoints += 1
+                                        darkPoints += 2
                                     else:
-                                        lightPoints += 1
+                                        lightPoints += 2
                             else:
                                 stdio.writeln("ERROR: Piece cannot be returned to starting position")
                                 sys.exit()
@@ -1212,15 +1213,17 @@ def doMove(row, col, direction, board, guiMode):
                                 else:
                                     board[row][col] = " "
                                     if(turn%2 == 0):
-                                        darkPoints += 1
+                                        darkPoints += 2
                                     else:
-                                        lightPoints += 1
+                                        lightPoints += 2
                             else:
                                 stdio.writeln("ERROR: Piece cannot be returned to starting position")
                                 sys.exit()
-                                              
-                            
-                
+                                
+                #decreasing the moves left
+                movesLeft -= 1
+
+      
         #changing the turn
         if(movesLeft == 0):
             #no more moves left for that player 
