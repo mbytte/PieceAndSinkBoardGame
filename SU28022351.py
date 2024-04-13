@@ -1657,6 +1657,8 @@ def readBoard(maxRow, maxCol):
         maxRow (int): The maximum number of rows in the board
         maxCol (int): The maximum number of columns in the board
     """
+    #NEED TO ADD VALIDATION FOR THE INPUT
+    
     
     #variables
     maxRow = int(maxRow)
@@ -1941,7 +1943,7 @@ def drawGame(board):
 
 
 #GAME==================================================================================================================
-#DONT KNOW IF IT WORKS BUT IT SHOULD HEY
+#WORKS
 def gameLoop(board, guiMode):
     """
     Executes the main game loop including
@@ -1969,6 +1971,8 @@ def gameLoop(board, guiMode):
     
     #looping until game win/lose condition is met
     while(continueGame(board)):
+        #NEED TO ADD VALIDATION FOR THE INPUT
+        
         #reading in the move
         fieldRow = stdio.readInt()
         fieldCol = stdio.readInt()
