@@ -1116,6 +1116,7 @@ def doMove(row, col, direction, board, guiMode):
                                     prevMove = "l " + str(row) + " " + str(col)
                                 else:
                                     board[row][col] = " "
+                                    board[row+1][col] = " "
                                     if(turn%2 == 0):
                                         darkPoints += 2
                                     else:
@@ -1136,6 +1137,7 @@ def doMove(row, col, direction, board, guiMode):
                                     prevMove = "r " + str(row) + " " + str(col)
                                 else:
                                     board[row][col] = " "
+                                    board[row+1][col] = " "
                                     if(turn%2 == 0):
                                         darkPoints += 2
                                     else:
@@ -1148,7 +1150,7 @@ def doMove(row, col, direction, board, guiMode):
                         if(direction == "d"):
                             if(prevMove != ("u " + str(row-1) + " " + str(col))):
                                 #moving the piece
-                                if(board[row+1][col] != "s"):
+                                if(board[row-1][col] != "s"):
                                     value = ((row-1)*len(board[0][:])) + col
                                     board[row][col] = " "
                                     board[row][col+1] = " "
@@ -1157,6 +1159,7 @@ def doMove(row, col, direction, board, guiMode):
                                     prevMove = "d " + str(row) + " " + str(col)
                                 else:
                                     board[row][col] = " "
+                                    board[row][col+1] = " "
                                     if(turn%2 == 0):
                                         darkPoints += 2
                                     else:
@@ -1168,7 +1171,7 @@ def doMove(row, col, direction, board, guiMode):
                         elif(direction == "u"):
                             if(prevMove != ("d " + str(row+1) + " " + str(col))):
                                 #moving the piece
-                                if(board[row-1][col] != "s"):
+                                if(board[row+1][col] != "s"):
                                     value = ((row+1)*len(board[0][:])) + col
                                     board[row][col] = " "
                                     board[row][col+1] = " "
@@ -1177,6 +1180,7 @@ def doMove(row, col, direction, board, guiMode):
                                     prevMove = "u " + str(row) + " " + str(col)
                                 else:
                                     board[row][col] = " "
+                                    board[row][col+1] = " "
                                     if(turn%2 == 0):
                                         darkPoints += 2
                                     else:
@@ -1195,6 +1199,7 @@ def doMove(row, col, direction, board, guiMode):
                                     prevMove = "l " + str(row) + " " + str(col)
                                 else:
                                     board[row][col] = " "
+                                    board[row][col+1] = " "
                                     if(turn%2 == 0):
                                         darkPoints += 2
                                     else:
@@ -1213,6 +1218,7 @@ def doMove(row, col, direction, board, guiMode):
                                     prevMove = "r " + str(row) + " " + str(col)
                                 else:
                                     board[row][col] = " "
+                                    board[row][col+1] = " "
                                     if(turn%2 == 0):
                                         darkPoints += 2
                                     else:
@@ -1234,7 +1240,7 @@ def doMove(row, col, direction, board, guiMode):
                         #checking if the player is moving back to the same spot (will be the opposite to the move here)
                         if(prevMove != "u " + str(row-1) + " " + str(col)):
                             #moving the piece
-                            if(board[row-1][col] != "s"):
+                            if(board[row-1][col] != "s"): #remove this at some stage
                                 value = ((row-3)*len(board[0][:])) + col
                                 board[row][col] = " "
                                 board[row-1][col] = str(value) 
@@ -1249,7 +1255,7 @@ def doMove(row, col, direction, board, guiMode):
                     elif(direction == "u"):
                         if(prevMove != "d " + str(row-1) + " " + str(col)):
                             #moving the piece
-                            if(board[row+1][col] != "s"):
+                            if(board[row+1][col] != "s"): #remove this at some stage
                                 value = ((row+1)*len(board[0][:])) + col
                                 board[row][col] = " "
                                 board[row+1][col] = pieceType
@@ -1264,7 +1270,7 @@ def doMove(row, col, direction, board, guiMode):
                     elif(direction == "l"):
                         if(prevMove != "r " + str(row) + " " + str(col-1)):
                             #moving the piece
-                            if(board[row][col-1] != "s"):
+                            if(board[row][col-1] != "s"): #remove this at some stage
                                 value = (row*len(board[0][:])) + col-3
                                 board[row][col] = " "
                                 board[row][col-3] = pieceType
@@ -1279,7 +1285,7 @@ def doMove(row, col, direction, board, guiMode):
                     elif(direction == "r"):
                         if(prevMove != "l " + str(row) + " " + str(col+1)):
                             #moving the piece
-                            if(board[row][col+1] != "s"):
+                            if(board[row][col+1] != "s"): #remove this at some stage
                                 value = (row*len(board[0][:])) + col+1
                                 board[row][col] = " "
                                 board[row][col+1] = pieceType
@@ -1350,7 +1356,7 @@ def doMove(row, col, direction, board, guiMode):
                         elif(direction == "l"):
                             if(prevMove != ("r " + str(row) + " " + str(col-1))):
                                 #moving the piece
-                                if(board[row][col-1] != "s"):
+                                if(board[row][col-1] != "s"): #remove this at some stage
                                     value = (row*len(board[0][:])) + col-1
                                     board[row][col] = " "
                                     board[row+1][col] = " "
@@ -1367,7 +1373,7 @@ def doMove(row, col, direction, board, guiMode):
                         elif(direction == "r"):
                             if(prevMove != ("l " + str(row) + " " + str(col+1))):
                                 #moving the piece
-                                if(board[row][col+1] != "s"):
+                                if(board[row][col+1] != "s"): #remove this at some stage
                                     value = (row*len(board[0][:])) + col+1
                                     board[row][col] = " "
                                     board[row+1][col] = " "
@@ -1386,7 +1392,7 @@ def doMove(row, col, direction, board, guiMode):
                         if(direction == "d"):
                             if(prevMove != ("u " + str(row-1) + " " + str(col))):
                                 #moving the piece
-                                if(board[row+1][col] != "s"):
+                                if(board[row+1][col] != "s"): #remove at some stage
                                     value = ((row-1)*len(board[0][:])) + col
                                     board[row][col] = " "
                                     board[row][col+1] = " "
@@ -1403,7 +1409,7 @@ def doMove(row, col, direction, board, guiMode):
                         elif(direction == "u"):
                             if(prevMove != ("d " + str(row+1) + " " + str(col))):
                                 #moving the piece
-                                if(board[row-1][col] != "s"):
+                                if(board[row-1][col] != "s"): #remove at some stage
                                     value = ((row+1)*len(board[0][:])) + col
                                     board[row][col] = " "
                                     board[row][col+1] = " "
@@ -1467,7 +1473,7 @@ def doMove(row, col, direction, board, guiMode):
                 #moving up
                 if(direction == "u"):
                     #moving the piece
-                    if(board[row+1][col] != "s"):
+                    if(board[row+2][col] != "s"):
                         value = ((row+2)*len(board[0][:])) + col
                         board[row][col] = " "
                         board[row+1][col] = " "
@@ -1490,7 +1496,7 @@ def doMove(row, col, direction, board, guiMode):
                 #moving down
                 elif(direction == "d"):
                     #moving the piece
-                    if(board[row-1][col] != "s"):
+                    if(board[row-2][col] != "s"):
                         value = ((row-1)*len(board[0][:])) + col
                         board[row][col] = " "
                         board[row+1][col] = " "
@@ -1536,7 +1542,7 @@ def doMove(row, col, direction, board, guiMode):
                 #moving right
                 elif(direction == "r"):
                     #moving the piece
-                    if(board[row][col+1] != "s"):
+                    if(board[row][col+2] != "s"):
                         value = (row*len(board[0][:])) + col+2
                         board[row][col] = " "
                         board[row+1][col] = " "
