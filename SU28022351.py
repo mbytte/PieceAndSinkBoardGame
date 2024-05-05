@@ -1587,7 +1587,16 @@ def doMove(row, col, direction, board, guiMode):
                             lightPoints += 4    
                 
                 #decreasing the moves left
-                movesLeft -= 2                           
+                movesLeft -= 2
+                
+            #piece is a blocked field
+            elif(pieceType == "x"):
+                stdio.writeln("No piece on field " + str(row) + " " + str(col))
+                sys.exit()
+                
+            #piece is a sink
+            #elif(pieceType == "s"):
+                #MOVING SINK
 
         #changing the turn
         if(movesLeft == 0):
