@@ -253,12 +253,12 @@ def checkMoveInput(row, col, direction, board):
         sys.exit()
     
     #checking if the direction is valid
-    if(direction != "u" and direction != "d" and direction != "l" and direction != "r"):
+    if(direction != "u" and direction != "d" and direction != "l" and direction != "r" and direction != "b"):
         stdio.writeln("ERROR: Invalid direction " + direction)
         sys.exit()
     
     #checking if the field is empty
-    if(board[row][col] == " "):
+    if(board[row][col] == " " and direction != "b"):
         stdio.writeln("ERROR: No piece on field " + str(row) + " " + str(col))
         sys.exit()
     
@@ -918,8 +918,24 @@ def doMove(row, col, direction, board, guiMode):
     global lightPoints
     global darkPoints
     
+    #player is adding a bomb
+    if(direction == "b"):
+        #checking if the player is on their first move
+        if(movesLeft == 2):
+            #checking if the field is free or being placed on another bomb
+            if(board[row][col] == " "):
+                board[row][col] = "o"
+            elif(board[row][col] == "o"):
+                board[row][col] = " " #bomb is being removed
+            else:
+                stdio.writeln("ERROR: Field " + str(row) + " " + str(col) + " not free")
+                sys.exit()
+        else:
+            stdio.writeln("ERROR: Cannot place bomb after move")
+            sys.exit()
+    
     #validating if the move is possible
-    if(validateMove(row, col, direction, board)):
+    elif(validateMove(row, col, direction, board)):
         if(movesLeft > 0):           
             #getting the piece type
             pieceType = board[row][col]
@@ -2051,8 +2067,10 @@ def printBoard(board):
         #writing out the values of the array into their respective places
         for j in range(0, len(board[i])):
             #ensuring that the board stays aligned according to the number of digits
-            if(len(str(board[i][j])) == 1):
+            if(len(str(board[i][j])) == 1 and board[i][j] != "o"):
                 stdio.write(" " + board[i][j] + "|")
+            elif(board[i][j] == "o"):
+                stdio.write("  |")
             else:
                 stdio.write(str(board[i][j]) + "|")
         stdio.writeln()
