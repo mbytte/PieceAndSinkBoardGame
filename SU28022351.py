@@ -1979,6 +1979,27 @@ def readBoard(maxRow, maxCol):
                 else: #all the other pieces will be upright anyways
                     board[pieceRow][pieceCol] = pieceType.upper()
                     
+        elif(piece == "x"):
+            #getting the coordinates
+            pieceRow = stdio.readString()
+            pieceCol = stdio.readString()
+            
+            #checking that the coordinates given are numbers
+            if(not pieceRow.isnumeric() or not pieceCol.isnumeric()):
+                stdio.writeln("ERROR: Field " + pieceRow + " " + pieceCol + " not on board")
+                sys.exit()
+                
+            #converting back to integers
+            pieceRow = int(pieceRow)
+            pieceCol = int(pieceCol)
+            
+            #checking that the field is open
+            if(board[pieceRow][pieceCol] == " "):
+                board[pieceRow][pieceCol] = "x"
+            else:
+                stdio.writeln("ERROR: Field " + str(pieceRow) + " " + str(pieceCol) + " not free")
+                sys.exit()
+                    
         #getting the value of the next piece
         piece = stdio.readString()
                 
