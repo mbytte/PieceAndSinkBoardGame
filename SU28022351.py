@@ -120,6 +120,16 @@ def checkSinkRange(maxRow, maxCol, sinkRow, sinkCol):
     """
     
     #a sink is valid if it is in the outer 3 rows/columns in the table
+    
+    #field provided is a letter
+    if(not sinkRow.isnumeric() or not sinkCol.isnumeric()):
+        stdio.writeln("ERROR: Field " + str(sinkRow) + " " + str(sinkCol) + " not on board")
+        sys.exit()
+        
+    #converting the sinkRow and sinkCol into integers
+    sinkRow = int(sinkRow)
+    sinkCol = int(sinkCol)
+    
     #field provided is not on the board
     if(((sinkRow < 0) or (sinkCol < 0)) or ((sinkRow >= maxRow) or (sinkCol >= maxCol))):
         stdio.writeln("ERROR: Field " + str(sinkRow) + " " + str(sinkCol) + " not on board")
@@ -148,6 +158,15 @@ def checkPieceRange(maxRow, maxCol, pieceRow, pieceCol):
         pieceRow (int): The row of the piece.
         pieceCol (int): The column of the piece.
     """
+    #field provided is a letter
+    if(not pieceRow.isnumeric() or not pieceCol.isnumeric()):
+        stdio.writeln("ERROR: Field " + str(pieceRow) + " " + str(pieceCol) + " not on board")
+        sys.exit()
+        
+    #converting the pieceRow and pieceCol into integers
+    pieceRow = int(pieceRow)
+    pieceCol = int(pieceCol)
+    
     #field provided is not on the board
     if(((pieceRow < 0) or (pieceCol < 0)) or ((pieceRow >= maxRow) or (pieceCol >= maxCol))):
         stdio.writeln("ERROR: Field " + str(pieceRow) + " " + str(pieceCol) + " not on board")
@@ -346,7 +365,7 @@ def validateMove(row, col, direction, board):
                         fieldOccupied = True
                         #getting the field that is occupied
                         for i in range(row-1, row-3, -1):
-                            if(board[i][col] != " " and board[i][col] != "s"):
+                            if(board[i][col] != " "):
                                 occupiedField = (i, col)
                                 break #only need to find the first field that is occupied
                 else:
@@ -376,7 +395,7 @@ def validateMove(row, col, direction, board):
                         fieldOccupied = True
                         #getting the field that is occupied
                         for i in range(col-2, col):
-                            if(board[row][i] != " " and board[row][i] != "s"):
+                            if(board[row][i] != " "):
                                 occupiedField = (row, i)
                                 break #only need to find the first field that is occupied
                 else:
@@ -391,7 +410,7 @@ def validateMove(row, col, direction, board):
                         fieldOccupied = True
                         #getting the field that is occupied
                         for i in range(col+1, col+3):
-                            if(board[row][i] != " " and board[row][i] != "s"):
+                            if(board[row][i] != " "):
                                 occupiedField = (row, i)
                                 break #only need to find the first field that is occupied
                 else:
@@ -446,7 +465,7 @@ def validateMove(row, col, direction, board):
                             fieldOccupied = True
                             #getting the field that is occupied
                             for i in range(row+2, row, -1):
-                                if(board[i][col-1] != " " and board[i][col-1] != "s"):
+                                if(board[i][col-1] != " "):
                                     occupiedField = (i, col-1)
                                     break #only need to find the first field that is occupied
                     else:
@@ -461,7 +480,7 @@ def validateMove(row, col, direction, board):
                             fieldOccupied = True
                             #getting the field that is occupied
                             for i in range(row, row+2):
-                                if(board[i][col+1] != " " and board[i][col+1] != "s"):
+                                if(board[i][col+1] != " "):
                                     occupiedField = (i, col+1)
                                     break #only need to find the first field that is occupied
                     else:
@@ -479,7 +498,7 @@ def validateMove(row, col, direction, board):
                             fieldOccupied = True
                             #getting the field that is occupied
                             for i in range(col, col+2):
-                                if(board[row-1][i] != " " and board[row-1][i] != "s"):
+                                if(board[row-1][i] != " "):
                                     occupiedField = (row-1, i)
                                     break #only need to find the first field that is occupied
                     else:
@@ -494,7 +513,7 @@ def validateMove(row, col, direction, board):
                             fieldOccupied = True
                             #getting the field that is occupied
                             for i in range(col, col+2):
-                                if(board[row+1][i] != " " and board[row+1][i] != "s"):
+                                if(board[row+1][i] != " "):
                                     occupiedField = (row+1, i)
                                     break #only need to find the first field that is occupied
                     else:
@@ -540,7 +559,7 @@ def validateMove(row, col, direction, board):
                         fieldOccupied = True
                         #getting the occupied field
                         for i in range(row-1, row-4, -1):
-                            if(board[i][col] != " " and board[i][col] != "s"):
+                            if(board[i][col] != " "):
                                 occupiedField = (i, col)
                                 break #only need to find the first field that is occupied
                 else:
@@ -555,7 +574,7 @@ def validateMove(row, col, direction, board):
                         fieldOccupied = True
                         #getting the occupied field
                         for i in range(row+3, row, -1):
-                            if(board[i][col] != " " and board[i][col] != "s"):
+                            if(board[i][col] != " "):
                                 occupiedField = (i, col)
                                 break #only need to find the first field that is occupied
                 else:
@@ -570,7 +589,7 @@ def validateMove(row, col, direction, board):
                         fieldOccupied = True
                         #getting the occupied field
                         for i in range(col-3, col):
-                            if(board[row][i] != " " and board[row][i] != "s"):
+                            if(board[row][i] != " "):
                                 occupiedField = (row, i)
                                 break #only need to find the first field that is occupied
                 else:
@@ -585,7 +604,7 @@ def validateMove(row, col, direction, board):
                         fieldOccupied = True
                         #getting the occupied field
                         for i in range(col+1, col+4):
-                            if(board[row][i] != " " and board[row][i] != "s"):
+                            if(board[row][i] != " "):
                                 occupiedField = (row, i)
                                 break #only need to find the first field that is occupied
                 else:
@@ -642,7 +661,7 @@ def validateMove(row, col, direction, board):
                             fieldOccupied = True
                             #getting the occupied field
                             for i in range(row+2, row-1, -1):
-                                if(board[i][col-1] != " " and board[i][col-1] != "s"):
+                                if(board[i][col-1] != " "):
                                     occupiedField = (i, col-1)
                                     break #only need to find the first field that is occupied
                     else:
@@ -657,7 +676,7 @@ def validateMove(row, col, direction, board):
                             fieldOccupied = True
                             #getting the occupied field
                             for i in range(row+2, row-1, -1):
-                                if(board[i][col+1] != " " and board[i][col+1] != "s"):
+                                if(board[i][col+1] != " "):
                                     occupiedField = (i, col+1)
                                     break #only need to find the first field that is occupied
                     else:
@@ -675,7 +694,7 @@ def validateMove(row, col, direction, board):
                             fieldOccupied = True
                             #getting the occupied field
                             for i in range(col, col+3):
-                                if(board[row-1][i] != " " and board[row-1][i] != "s"):
+                                if(board[row-1][i] != " "):
                                     occupiedField = (row-1, i)
                                     break #only need to find the first field that is occupied
                     else:
@@ -690,7 +709,7 @@ def validateMove(row, col, direction, board):
                             fieldOccupied = True
                             #getting the occupied field
                             for i in range(col, col+3):
-                                if(board[row+1][i] != " " and board[row+1][i] != "s"):
+                                if(board[row+1][i] != " "):
                                     occupiedField = (row+1, i)
                                     break #only need to find the first field that is occupied
                     else:
@@ -735,7 +754,7 @@ def validateMove(row, col, direction, board):
                     #getting the field that is occupied
                     for i in range(row+3, row+1, -1):
                         for j in range(col, col+2):
-                            if(board[i][j] != " " and board[i][j] != "s"):
+                            if(board[i][j] != " "):
                                 occupiedField = (i,j)
                                 break #only need to find the first field that is occupied
             else:
@@ -749,9 +768,9 @@ def validateMove(row, col, direction, board):
                 else:
                     fieldOccupied = True
                     #getting the field that is occupied
-                    for i in range(row-1, row-3, -1):
+                    for i in range(row-2, row):
                         for j in range(col, col+2):
-                            if(board[i][j] != " " and board[i][j] != "s"):
+                            if(board[i][j] != " "):
                                 occupiedField = (i,j)
                                 break #only need to find the first field that is occupied
             else:
@@ -767,7 +786,7 @@ def validateMove(row, col, direction, board):
                     #getting the field that is occupied
                     for i in range(row+1, row-1, -1):
                         for j in range(col-2, col):
-                            if(board[i][j] != " " and board[i][j] != "s"):
+                            if(board[i][j] != " "):
                                 occupiedField = (i,j)
                                 break #only need to find the first field that is occupied
             else:
@@ -783,7 +802,7 @@ def validateMove(row, col, direction, board):
                     #getting the field that is occupied
                     for i in range(row+1, row-1, -1):
                         for j in range(col+2, col+4):
-                            if(board[i][j] != " " and board[i][j] != "s"):
+                            if(board[i][j] != " "):
                                 occupiedField = (i,j)
                                 break #only need to find the first field that is occupied
                     
@@ -810,7 +829,8 @@ def continueGame(board):
     global lightPoints
     global darkPoints
     global gettingAllMoves
-    
+    global prevMove
+        
     #a player has won with points
     if(lightPoints >= 4 or darkPoints >= 4):
         if(lightPoints >= 4):
@@ -822,22 +842,24 @@ def continueGame(board):
         
         return False
     
-    #partial game -> no more moves left
-    if(stdio.isEmpty()):
-        return False 
+    #partial game -> no more moves left to be inputted
+    gettingAllMoves = True
+    if(stdio.isEmpty() and ((turn%2 > 0 and getAllMoves(board, "light") == [False]) or (turn%2 == 0 and getAllMoves(board, "dark") == [False]))):
+        return False    
     
     #a player has lost by having no more moves
-    gettingAllMoves = True
-    if((turn%2 > 0 and getAllMoves(board, "light") == []) or (turn%2 == 0 and getAllMoves(board, "dark") == [])):
+    if((turn%2 > 0 and getAllMoves(board, "light") == []) or (turn%2 == 0 and (getAllMoves(board, "dark") == []))):
         if(turn%2 > 0):
             stdio.writeln("Light loses")
             sys.exit()
         else:
             stdio.writeln("Dark loses")
             sys.exit()
-        
+
+    if(stdio.isEmpty()):
         return False
-    gettingAllMoves = False
+    
+    gettingAllMoves = False  
     
     #game continues
     return True
@@ -1096,6 +1118,7 @@ def doMove(row, col, direction, board, guiMode):
                                     prevMove = "d " + str(row) + " " + str(col)
                                 else:
                                     board[row][col] = " "
+                                    board[row+1][col] = " "
                                     if(turn%2 == 0):
                                         darkPoints += 2
                                     else:
@@ -1502,10 +1525,10 @@ def doMove(row, col, direction, board, guiMode):
                         board[row+1][col] = " "
                         board[row][col+1] = " "
                         board[row+1][col+1] = " "
-                        board[row-1][col] = pieceType
+                        board[row-2][col] = pieceType
                         board[row-2][col+1] = str(value)
                         board[row-1][col+1] = str(value)
-                        board[row-2][col] = str(value)
+                        board[row-1][col] = str(value)
                         prevMove = "d " + str(row) + " " + str(col)
                     else: #field is a sink
                         board[row][col] = " "
@@ -1608,7 +1631,8 @@ def getAllMoves(board, player):
     """
     #variables
     moves = []
-    
+    pieceFound = False #can be used to indicate whether a player has moves left or not
+    moves.append(pieceFound)
     
     #light player
     if(player == "light"):
@@ -1617,7 +1641,11 @@ def getAllMoves(board, player):
             for j in range(0, len(board[i])):
                 #checking if the field contains an int
                 if(not str(board[i][j]).isnumeric()):
-                    if(board[i][j].islower()):
+                    if(board[i][j].islower() and board[i][j] != "s"):
+                        if(not pieceFound): #a piece has been found
+                            pieceFound = True
+                            moves.remove(False)
+                            
                         if(validateMove(i, j, "u", board)):
                             moves.append("u " + str(i) + " " + str(j))
                         if(validateMove(i, j, "d", board)):
@@ -1631,17 +1659,39 @@ def getAllMoves(board, player):
         for i in range(0, len(board)):
             for j in range(0, len(board[i])):
                 #checking if the field contains an int
-                if(not str(board[i][j]).isnumeric()):   
+                if(not str(board[i][j]).isnumeric()):  
                     if(board[i][j].isupper()):
+                        if(not pieceFound): #a piece has been found
+                            pieceFound = True
+                            moves.remove(False)
+                            
                         if(validateMove(i, j, "u", board)):
                             moves.append("u " + str(i) + " " + str(j))
-                        elif(validateMove(i, j, "d", board)):
+                        if(validateMove(i, j, "d", board)):
                             moves.append("d " + str(i) + " " + str(j))
-                        elif(validateMove(i, j, "l", board)):
+                        if(validateMove(i, j, "l", board)):
                             moves.append("l " + str(i) + " " + str(j))
-                        elif(validateMove(i, j, "r", board)):
+                        if(validateMove(i, j, "r", board)):
                             moves.append("r " + str(i) + " " + str(j))
-                        
+                            
+    #getting the opposite of the prevMove and removing it (means the player is moving back to the same spot)
+    reverseMove = ""
+    if(prevMove != None):
+        if(prevMove[0] == "l"):
+            reverseMove = "r " + str(int(prevMove[2])) + " " + str(int(prevMove[4]) - 1)
+        elif(prevMove[0] == "r"):
+            reverseMove = "l " + str(int(prevMove[2])) + " " + str(int(prevMove[4]) + 1)
+        elif(prevMove[0] == "u"):
+            reverseMove = "d " + str(int(prevMove[2]) + 1) + " " + str(int(prevMove[4]))
+        elif(prevMove[0] == "d"):
+            reverseMove = "u " + str(int(prevMove[2]) - 1) + " " + str(int(prevMove[4]))
+            
+        for i in range(0, len(moves)):
+            if(moves[i] == reverseMove):
+                moves.remove(reverseMove)
+                break
+            
+                      
     return moves
 #=======================================================================================================================
 
@@ -1657,9 +1707,7 @@ def readBoard(maxRow, maxCol):
         maxRow (int): The maximum number of rows in the board
         maxCol (int): The maximum number of columns in the board
     """
-    #NEED TO ADD VALIDATION FOR THE INPUT
-    
-    
+      
     #variables
     maxRow = int(maxRow)
     maxCol = int(maxCol)
@@ -1678,32 +1726,85 @@ def readBoard(maxRow, maxCol):
         #gets the coordinates of a specific piece and adds it to the board
         elif(piece == "s"):
             #getting the size
-            sinkSize = stdio.readInt()
+            sinkSize = stdio.readString()
             
             #getting the coordinates
-            sinkRow = stdio.readInt()
-            sinkCol = stdio.readInt()
+            sinkRow = stdio.readString()
+            sinkCol = stdio.readString()
             
             #checking if the sink is in the correct range for sink setup 
             if(checkSinkRange(maxRow, maxCol, sinkRow, sinkCol)): #error message is printed in the function
+                #converting back to integers
+                sinkRow = int(sinkRow)
+                sinkCol = int(sinkCol)
+                
                 #checking if the field is occupied
                 if(board[sinkRow][sinkCol] != " "):
                     stdio.writeln("ERROR: Field " + str(sinkRow) + " " + str(sinkCol) + " not free")
                     sys.exit()
                 
                 #checking if the size is valid
-                if(sinkSize != 1 and sinkSize != 2):
+                if(sinkSize != "1" and sinkSize != "2"):
                     stdio.writeln("ERROR: Invalid piece type " + str(sinkSize))
                     sys.exit()
                 
                 #checking if the piece is 1x1 or 2x2
-                if(sinkSize == 1): #piece is 1x1
+                if(sinkSize == "1"): #piece is 1x1
                     #checking if there are any sinks around this sink
-                    if(board[sinkRow-1][sinkCol] == "s" or board[sinkRow+1][sinkCol] == "s" or board[sinkRow][sinkCol-1] == "s" or board[sinkRow][sinkCol+1] == "s"):
-                        stdio.writeln("ERROR: Sink cannot be next to another sink")
-                        sys.exit()
-                    else: #no sinks around this sink
-                        board[sinkRow][sinkCol] = "s"
+                    #sink at the top
+                    if(sinkRow == maxRow-1):
+                        #top-left corner
+                        if(sinkCol == 0 ):
+                            if(board[sinkRow-1][sinkCol] == "s" or board[sinkRow][sinkCol+1] == "s"):
+                                stdio.writeln("ERROR: Sink cannot be next to another sink")
+                                sys.exit()
+                        #top-right corner
+                        elif(sinkCol == maxCol-1):
+                            if(board[sinkRow-1][sinkCol] == "s" or board[sinkRow][sinkCol-1] == "s"):
+                                stdio.writeln("ERROR: Sink cannot be next to another sink")
+                                sys.exit()
+                        #sink is just at the top
+                        else:
+                            if(board[sinkRow-1][sinkCol] == "s" or board[sinkRow][sinkCol-1] == "s" or board[sinkRow][sinkCol+1] == "s"):
+                                stdio.writeln("ERROR: Sink cannot be next to another sink")
+                                sys.exit()
+                        
+                    #sink at the bottom
+                    elif(sinkRow == 0):
+                        #bottom-right corner
+                        if(sinkCol == maxCol-1):
+                            if(board[sinkRow+1][sinkCol] == "s" or board[sinkRow][sinkCol-1] == "s" or board[sinkRow+1][sinkCol-1] == "s"):
+                                stdio.writeln("ERROR: Sink cannot be next to another sink")
+                                sys.exit()
+                        #bottom-left corner
+                        elif(sinkCol == 0):
+                            if(board[sinkRow+1][sinkCol] == "s" or board[sinkRow][sinkCol+1] == "s" or board[sinkRow+1][sinkCol+1] == "s"):
+                                stdio.writeln("ERROR: Sink cannot be next to another sink")
+                                sys.exit()
+                        #sink is just at the bottom
+                        else:
+                            if(board[sinkRow+1][sinkCol] == "s" or board[sinkRow][sinkCol-1] == "s" or board[sinkRow][sinkCol+1] == "s"):
+                                stdio.writeln("ERROR: Sink cannot be next to another sink")
+                                sys.exit()
+                    #sink is on the left border
+                    elif(sinkCol == 0):
+                        if(board[sinkRow-1][sinkCol] == "s" or board[sinkRow+1][sinkCol] == "s" or board[sinkRow][sinkCol+1] == "s"):
+                            stdio.writeln("ERROR: Sink cannot be next to another sink")
+                            sys.exit()
+                    #sink is on the right border
+                    elif(sinkCol == maxCol-1):
+                        if(board[sinkRow-1][sinkCol] == "s" or board[sinkRow+1][sinkCol] == "s" or board[sinkRow][sinkCol-1] == "s"):
+                            stdio.writeln("ERROR: Sink cannot be next to another sink")
+                            sys.exit()
+                        
+                    #sink isn't on any borders
+                    else:
+                        if(board[sinkRow-1][sinkCol] == "s" or board[sinkRow+1][sinkCol] == "s" or board[sinkRow][sinkCol-1] == "s" or board[sinkRow][sinkCol+1] == "s"):
+                            stdio.writeln("ERROR: Sink cannot be next to another sink")
+                            sys.exit()
+                            
+                    #no sinks around this sink
+                    board[sinkRow][sinkCol] = "s"
                     
                 else:  #piece is 2x2
                     #checking if the sink can fit on the board
@@ -1712,7 +1813,7 @@ def readBoard(maxRow, maxCol):
                         sys.exit()
                         
                     #checking if the extra fields needed for this sink size are in the correct position
-                    elif((sinkRow + 1 < 3 or sinkRow + 1 >= maxRow - 3) or (sinkCol + 1 < 3 or sinkCol + 1 >= maxCol - 3)):
+                    elif((sinkRow + 1 < 3 or sinkRow + 1 > maxRow - 3) or (sinkCol + 1 < 3 or sinkCol + 1 > maxCol - 3)):
                         #checking if there is a sink already in the extra fields
                         #there is
                         if(board[sinkRow][sinkCol + 1] != " " or board[sinkRow + 1][sinkCol] != " " or board[sinkRow + 1][sinkCol + 1] != " "):
@@ -1777,10 +1878,9 @@ def readBoard(maxRow, maxCol):
                             board[sinkRow + 1][sinkCol] = "s"
                             board[sinkRow + 1][sinkCol + 1] = "s"
                     #sink in the wrong position
-                    # else:
-                    #     stdio.writeln("HERE")
-                    #     stdio.writeln("ERROR: Sink in the wrong position")
-                    #     sys.exit()
+                    else:
+                        stdio.writeln("ERROR: Sink in the wrong position")
+                        sys.exit()
                 
                 
         elif(piece == "l"):
@@ -1788,14 +1888,18 @@ def readBoard(maxRow, maxCol):
             pieceType = stdio.readString()
             
             #getting the coordinates
-            pieceRow = stdio.readInt()
-            pieceCol = stdio.readInt()
+            pieceRow = stdio.readString()
+            pieceCol = stdio.readString()
 
             #checking that the field is in a valid position for piece setup
             if(checkPieceRange(maxRow, maxCol, pieceRow, pieceCol)): #error message is printed in the function
+                #converting back to integers
+                pieceRow = int(pieceRow)
+                pieceCol = int(pieceCol)
+                
                 #checking if the field is occupied
                 if(board[pieceRow][pieceCol] != " "):
-                    stdio.writeln("ERROR: Field " + str(pieceRow) + " " + str(pieceCol) + " not free")
+                    stdio.writeln("ERROR: Field " + pieceRow + " " + pieceCol + " not free")
                     sys.exit()
                 
                 #checking if the piece type is valid
@@ -1833,11 +1937,15 @@ def readBoard(maxRow, maxCol):
             pieceType = stdio.readString()
             
             #getting the coordinates
-            pieceRow = stdio.readInt()
-            pieceCol = stdio.readInt()   
+            pieceRow = stdio.readString()
+            pieceCol = stdio.readString()   
             
             #checking that the field is in a valid position for piece setup
             if(checkPieceRange(maxRow, maxCol, pieceRow, pieceCol)): #error message is printed in the function
+                #converting back to integers
+                pieceRow = int(pieceRow)
+                pieceCol = int(pieceCol)
+                
                 #checking if the field is occupied
                 if(board[pieceRow][pieceCol] != " "):
                     stdio.writeln("ERROR: Field " + str(pieceRow) + " " + str(pieceCol) + " not free")
@@ -1971,8 +2079,6 @@ def gameLoop(board, guiMode):
     
     #looping until game win/lose condition is met
     while(continueGame(board)):
-        #NEED TO ADD VALIDATION FOR THE INPUT
-        
         #reading in the move
         fieldRow = stdio.readInt()
         fieldCol = stdio.readInt()
