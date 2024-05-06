@@ -41,6 +41,8 @@ global prevMove #the previous move made
 prevMove = None
 global gettingAllMoves #indicates whether the program is collecting all the possible moves for a player 
 gettingAllMoves = False #will be used to stop error messages from being printed in validateMove (just want to get the moves)
+global bombPlaced
+bombPlaced = False
 #=======================================================================================================================
 
 
@@ -359,7 +361,7 @@ def validateMove(row, col, direction, board):
             if(direction == "d"):
                 #checking if the board border is reached or not
                 if(row - 2 >= 0): 
-                    if((board[row - 1][col] == " " and board[row - 2][col] == " ") or (board[row - 1][col] == "s") and (board[row - 2][col] == "s")):
+                    if((board[row - 1][col] == " " and board[row - 2][col] == " ") or ((board[row - 1][col] == "s") and (board[row - 2][col] == "s")) or (board[row - 2 ][col] == "o" or board[row - 1][col] == "o")):
                         return True
                     else:
                         fieldOccupied = True
@@ -374,7 +376,7 @@ def validateMove(row, col, direction, board):
             elif(direction == "u"):
                 #checking if the board border is reached or not
                 if(row + 2 <= len(board) - 1):
-                    if((board[row + 1][col] == " " and board[row + 2][col] == " ") or (board[row + 1][col] == "s") and (board[row + 2][col] == "s")):
+                    if((board[row + 1][col] == " " and board[row + 2][col] == " ") or (board[row + 1][col] == "s") and (board[row + 2][col] == "s") or (board[row + 1][col] == "o" or board[row + 2][col] == "o")):
                         return True
                     else:
                         fieldOccupied = True
@@ -389,7 +391,7 @@ def validateMove(row, col, direction, board):
             elif(direction == "l"):
                 #checking if the board border is reached or not
                 if(col - 2 >= 0):
-                    if((board[row][col - 1] == " " and board[row][col - 2] == " ") or (board[row][col - 1] == "s") and (board[row][col - 2] == "s")):
+                    if((board[row][col - 1] == " " and board[row][col - 2] == " ") or (board[row][col - 1] == "s") and (board[row][col - 2] == "s") or (board[row][col - 1] == "o" or board[row][col - 2] == "o")):
                         return True
                     else:
                         fieldOccupied = True
@@ -404,7 +406,7 @@ def validateMove(row, col, direction, board):
             elif(direction == "r"):
                 #checking if the board border is reached or not
                 if(col + 2 <= len(board[0]) - 1):
-                    if((board[row][col + 1] == " " and board[row][col + 2] == " ") or (board[row][col + 1] == "s") and (board[row][col + 2] == "s")):
+                    if((board[row][col + 1] == " " and board[row][col + 2] == " ") or (board[row][col + 1] == "s") and (board[row][col + 2] == "s") or (board[row][col + 1] == "o" or board[row][col + 2] == "o")):
                         return True
                     else:
                         fieldOccupied = True
@@ -435,7 +437,7 @@ def validateMove(row, col, direction, board):
                 if(direction == "d"):
                     #checking if the board border is reached or not
                     if(row - 1 >= 0): #only need to check for one field because the piece will flip over into its upright position
-                        if((board[row - 1][col] == " ") or (board[row - 1][col] == "s")):
+                        if((board[row - 1][col] == " ") or (board[row - 1][col] == "s") or (board[row - 1][col] == "o")):
                             return True
                         else:
                             fieldOccupied = True
@@ -447,7 +449,7 @@ def validateMove(row, col, direction, board):
                 elif(direction == "u"):
                     #checking if the board border is reached or not
                     if(row + 2 <= len(board) - 1): #only one field for the same reason as the up direction but needs to be +2 to account for the field the piece is in under its coords
-                        if((board[row + 2][col] == " ") or (str(board[row + 2][col]) == "s")):
+                        if((board[row + 2][col] == " ") or (board[row + 2][col] == "s") or (board[row + 2][col] == "o")):
                             return True
                         else:
                             fieldOccupied = True
@@ -459,7 +461,7 @@ def validateMove(row, col, direction, board):
                 elif(direction == "l"):
                     #checking if the board border is reached or not
                     if(col - 1 >= 0):
-                        if((board[row][col - 1] == " " and board[row + 1][col - 1] == " ") or (board[row][col - 1] == "s" and board[row + 1][col - 1] == "s")):
+                        if((board[row][col - 1] == " " and board[row + 1][col - 1] == " ") or (board[row][col - 1] == "s" and board[row + 1][col - 1] == "s") or (board[row][col - 1] == "o" or board[row + 1][col - 1] == "o")):
                             return True
                         else:
                             fieldOccupied = True
@@ -474,7 +476,7 @@ def validateMove(row, col, direction, board):
                 elif(direction == "r"):
                     #checking if the board border is reached or not
                     if(col + 1 <= len(board[0]) - 1):
-                        if((board[row][col + 1] == " " and board[row + 1][col + 1] == " ") or (board[row][col + 1] == "s" and board[row + 1][col + 1] == "s")):
+                        if((board[row][col + 1] == " " and board[row + 1][col + 1] == " ") or (board[row][col + 1] == "s" and board[row + 1][col + 1] == "s") or (board[row][col + 1] == "o" or board[row + 1][col + 1] == "o")):
                             return True
                         else:
                             fieldOccupied = True
@@ -492,7 +494,7 @@ def validateMove(row, col, direction, board):
                 if(direction == "d"):
                     #checking if the board border is reached or not
                     if(row - 1 >= 0):
-                        if((board[row - 1][col] == " " and board[row - 1][col + 1] == " ") or (board[row - 1][col] == "s" and board[row - 1][col + 1] == "s")):
+                        if((board[row - 1][col] == " " and board[row - 1][col + 1] == " ") or (board[row - 1][col] == "s" and board[row - 1][col + 1] == "s") or (board[row - 1][col] == "o" or board[row - 1][col + 1] == "o")):
                             return True
                         else:
                             fieldOccupied = True
@@ -507,7 +509,7 @@ def validateMove(row, col, direction, board):
                 elif(direction == "u"):
                     #checking if the board border is reached or not
                     if(row + 1 <= len(board) - 1):
-                        if((board[row + 1][col] == " " and board[row + 1][col + 1] == " ") or (board[row + 1][col] == "s" and board[row + 1][col + 1] == "s")):
+                        if((board[row + 1][col] == " " and board[row + 1][col + 1] == " ") or (board[row + 1][col] == "s" and board[row + 1][col + 1] == "s") or (board[row + 1][col] == "o" or board[row + 1][col + 1] == "o")):
                             return True
                         else:
                             fieldOccupied = True
@@ -522,7 +524,7 @@ def validateMove(row, col, direction, board):
                 elif(direction == "l"):
                     #checking if the board border is reached or not
                     if(col - 1 >= 0):
-                        if((board[row][col - 1] == " ") or (board[row][col - 1] == "s")):
+                        if((board[row][col - 1] == " ") or (board[row][col - 1] == "s") or (board[row][col - 1] == "o")):
                             return True
                         else:
                             fieldOccupied = True
@@ -534,7 +536,7 @@ def validateMove(row, col, direction, board):
                 elif(direction == "r"):
                     #checking if the board border is reached or not
                     if(col + 2 <= len(board[0]) - 1):
-                        if((board[row][col + 2] == " ") or (board[row][col + 2] == "s")):
+                        if((board[row][col + 2] == " ") or (board[row][col + 2] == "s") or (board[row][col + 2] == "o")):
                             return True
                         else:
                             fieldOccupied = True
@@ -808,7 +810,9 @@ def validateMove(row, col, direction, board):
                     
             else:
                 moveBeyondBoard = True
-                
+    #piece is a blocked field
+    elif(board[row][col] == "x" or board[row][col] == "o"):
+        return True   
                 
     #move is invalid
     if(moveBeyondBoard and not gettingAllMoves):
@@ -917,11 +921,12 @@ def doMove(row, col, direction, board, guiMode):
     global prevMove
     global lightPoints
     global darkPoints
+    global bombPlaced
     
     #player is adding a bomb
     if(direction == "b"):
         #checking if the player is on their first move
-        if(movesLeft == 2):
+        if(not bombPlaced):
             #checking if the field is free or being placed on another bomb
             if(board[row][col] == " "):
                 board[row][col] = "o"
@@ -930,7 +935,7 @@ def doMove(row, col, direction, board, guiMode):
             else:
                 stdio.writeln("ERROR: Field " + str(row) + " " + str(col) + " not free")
                 sys.exit()
-            movesLeft -= 1
+            bombPlaced = True
         else:
             stdio.writeln("ERROR: Cannot place bomb after move")
             sys.exit()
@@ -1037,12 +1042,25 @@ def doMove(row, col, direction, board, guiMode):
                         #checking if the player is moving back to the same spot (will be the opposite to the move here)
                         if(prevMove != "u " + str(row-1) + " " + str(col)):
                             #moving the piece
-                            if(board[row-1][col] != "s"): #only need to check for one because this is checked in validateMove
+                            if(board[row-1][col] != "s" and (board[row-1][col] != "o" or board[row-2][col] != "o")): #only need to check for one because this is checked in validateMove
                                 value = ((row-2)*len(board[0][:])) + col
                                 board[row][col] = " "
                                 board[row-1][col] = str(value) 
                                 board[row-2][col] = pieceType
                                 prevMove = "d " + str(row) + " " + str(col)
+                            elif(board[row-1][col] != "o" or board[row-2][col] != "o"): #one of the fields is a bomb
+                                #both are bombs
+                                if(board[row-1][col] == "o" and board[row-2][col] == "o"):
+                                    board[row][col] = " "
+                                    board[row-1][col] = " "
+                                    board[row-2][col] = " "
+                                #one is a bomb
+                                elif(board[row-1][col] == "o"):
+                                    board[row][col] = " "
+                                    board[row-1][col] = " "
+                                else:
+                                    board[row][col] = " "
+                                    board[row-2][col] = " "    
                             else: #moving into a sink
                                 board[row][col] = " "
                                 if(turn%2 == 0): #dark scores
@@ -1055,12 +1073,25 @@ def doMove(row, col, direction, board, guiMode):
                     elif(direction == "u"):
                         if(prevMove != "d " + str(row+2) + " " + str(col)):
                             #moving the piece
-                            if(board[row+1][col] != "s"): #only need to check for one because this is checked in validateMove
+                            if(board[row+1][col] != "s" and board[row+1][col] != "o" and board[row+2][col] != "o"): #only need to check for one because this is checked in validateMove
                                 value = ((row+1)*len(board[0][:])) + col
                                 board[row][col] = " "
                                 board[row+1][col] = pieceType
                                 board[row+2][col] = str(value)
                                 prevMove = "u " + str(row) + " " + str(col)
+                            elif(board[row+1][col] != "o" or board[row+2][col] != "o"): #one of the fields is a bomb
+                                #both are bombs
+                                if(board[row+1][col] == "o" and board[row+2][col] == "o"):
+                                    board[row][col] = " "
+                                    board[row+1][col] = " "
+                                    board[row+2][col] = " "
+                                #one is a bomb
+                                elif(board[row+1][col] == "o"):
+                                    board[row][col] = " "
+                                    board[row+1][col] = " "
+                                else:
+                                    board[row][col] = " "
+                                    board[row+2][col] = " "
                             else: #moving into a sink
                                 board[row][col] = " "
                                 if(turn%2 == 0): #dark scores
@@ -1073,12 +1104,26 @@ def doMove(row, col, direction, board, guiMode):
                     elif(direction == "l"):
                         if(prevMove != "r " + str(row) + " " + str(col-1)):
                             #moving the piece
-                            if(board[row][col-1] != "s"):
+                            if(board[row][col-1] != "s"  and board[row][col-1] != "o" and board[row][col-2] != "o"):
                                 value = (row*len(board[0][:])) + col-2
                                 board[row][col] = " "
                                 board[row][col-2] = pieceType
                                 board[row][col-1] = str(value)
                                 prevMove = "l " + str(row) + " " + str(col)
+                            #one of the fields is a bomb
+                            elif(board[row][col-1] != "o" or board[row][col-2] != "o"):
+                                #both are bombs
+                                if(board[row][col-1] == "o" and board[row][col-2] == "o"):
+                                    board[row][col] = " "
+                                    board[row][col-1] = " "
+                                    board[row][col-2] = " "
+                                #one is a bomb
+                                elif(board[row][col-1] == "o"):
+                                    board[row][col] = " "
+                                    board[row][col-1] = " "
+                                else:
+                                    board[row][col] = " "
+                                    board[row][col-2] = " "
                             else: #moving into a sink
                                 board[row][col] = " "
                                 if(turn%2 == 0): #dark scores
@@ -1091,12 +1136,26 @@ def doMove(row, col, direction, board, guiMode):
                     elif(direction == "r"):
                         if(prevMove != "l " + str(row) + " " + str(col+1)):
                             #moving the piece
-                            if(board[row][col+1] != "s"):
+                            if(board[row][col+1] != "s" and board[row][col+1] != "o" and board[row][col+2] != "o"):
                                 value = (row*len(board[0][:])) + col+1
                                 board[row][col] = " "
                                 board[row][col+1] = pieceType
                                 board[row][col+2] = str(value)
                                 prevMove = "r " + str(row) + " " + str(col)
+                            #one of the fields is a bomb
+                            elif(board[row][col+1] != "o" or board[row][col+2] != "o"):
+                                #both are bombs
+                                if(board[row][col+1] == "o" and board[row][col+2] == "o"):
+                                    board[row][col] = " "
+                                    board[row][col+1] = " "
+                                    board[row][col+2] = " "
+                                #one is a bomb
+                                elif(board[row][col+1] == "o"):
+                                    board[row][col] = " "
+                                    board[row][col+1] = " "
+                                else:
+                                    board[row][col] = " "
+                                    board[row][col+2] = " "
                             else: #moving into a sink
                                 board[row][col] = " "
                                 if(turn%2 == 0): #dark scores
@@ -1125,11 +1184,15 @@ def doMove(row, col, direction, board, guiMode):
                         if(direction == "u"):
                             if(prevMove != ("d " + str(row+2) + " " + str(col))):
                                 #moving the piece
-                                if(str(board[row+2][col]) != "s"):
+                                if(str(board[row+2][col]) != "s" and str(board[row+2][col]) != "o"):
                                     board[row][col] = " "
                                     board[row+1][col] = " "
                                     board[row+2][col] = pieceType
                                     prevMove = "u " + str(row) + " " + str(col)
+                                elif(board[row+2][col] == "o"): #field is a bomb
+                                    board[row][col] = " "
+                                    board[row+1][col] = " "
+                                    board[row+2][col] = " "
                                 else: #piece is being sunk
                                     board[row][col] = " "
                                     if(turn%2 == 0):
@@ -1143,11 +1206,16 @@ def doMove(row, col, direction, board, guiMode):
                         elif(direction == "d"):
                             if(prevMove != ("u " + str(row-1) + " " + str(col))):
                                 #moving the piece
-                                if(board[row-1][col] != "s"):
+                                if(board[row-1][col] != "s" and board[row-1][col] != "o"):
                                     board[row][col] = " "
                                     board[row+1][col] = " "
                                     board[row-1][col] = pieceType
                                     prevMove = "d " + str(row) + " " + str(col)
+                                #field is a bomb
+                                elif(board[row-1][col] == "o"):
+                                    board[row][col] = " "
+                                    board[row+1][col] = " "
+                                    board[row-1][col] = " "
                                 else:
                                     board[row][col] = " "
                                     board[row+1][col] = " "
@@ -1163,12 +1231,29 @@ def doMove(row, col, direction, board, guiMode):
                             if(prevMove != ("r " + str(row) + " " + str(col+1))):
                                 #moving the piece
                                 value = (row*len(board[0][:])) + col-1
-                                if(board[row][col-1] != "s"):
+                                if(board[row][col-1] != "s" and board[row][col-1] != "o" and board[row+1][col-1] != "o"):
                                     board[row][col] = " "
                                     board[row+1][col] = " "
                                     board[row][col-1] = pieceType
                                     board[row+1][col-1] = str(value)
                                     prevMove = "l " + str(row) + " " + str(col)
+                                #one of the fields is a bomb
+                                elif(board[row][col-1] == "o" or board[row][col-2] == "o"):
+                                    #both are bombs
+                                    if(board[row][col-1] == "o" and board[row][col-2] == "o"):
+                                        board[row][col] = " "
+                                        board[row+1][col] = " "
+                                        board[row][col-1] = " "
+                                        board[row+1][col-1] = " "
+                                    #one is a bomb
+                                    elif(board[row][col-1] == "o"):
+                                        board[row][col] = " "
+                                        board[row+1][col] = " "
+                                        board[row][col-1] = " "
+                                    else:
+                                        board[row][col] = " "
+                                        board[row+1][col] = " "
+                                        board[row+1][col-1] = " "
                                 else:
                                     board[row][col] = " "
                                     board[row+1][col] = " "
@@ -1184,12 +1269,29 @@ def doMove(row, col, direction, board, guiMode):
                             if(prevMove != ("l " + str(row) + " " + str(col+1))):
                                 #moving the piece
                                 value = (row*len(board[0][:])) + col+1
-                                if(board[row][col+1] != "s"):
+                                if(board[row][col+1] != "s" and board[row][col+1] != "o" and board[row+1][col+1] != "o"):
                                     board[row][col] = " "
                                     board[row+1][col] = " "
                                     board[row][col+1] = pieceType
                                     board[row+1][col+1] = str(value)
                                     prevMove = "r " + str(row) + " " + str(col)
+                                #one of the fields is a bomb
+                                elif(board[row][col+1] == "o" or board[row+1][col+1] == "o"):
+                                    #both are bombs
+                                    if(board[row][col+1] == "o" and board[row+1][col+1] == "o"):
+                                        board[row][col] = " "
+                                        board[row+1][col] = " "
+                                        board[row][col+1] = " "
+                                        board[row+1][col+1] = " "
+                                    #one is a bomb
+                                    elif(board[row][col+1] == "o"):
+                                        board[row][col] = " "
+                                        board[row+1][col] = " "
+                                        board[row][col+1] = " "
+                                    else:
+                                        board[row][col] = " "
+                                        board[row+1][col] = " "
+                                        board[row+1][col+1] = " "
                                 else:
                                     board[row][col] = " "
                                     board[row+1][col] = " "
@@ -1205,13 +1307,29 @@ def doMove(row, col, direction, board, guiMode):
                         if(direction == "d"):
                             if(prevMove != ("u " + str(row-1) + " " + str(col))):
                                 #moving the piece
-                                if(board[row-1][col] != "s"):
+                                if(board[row-1][col] != "s" and board[row-1][col] != "o" and board[row-1][col+1] != "o"):
                                     value = ((row-1)*len(board[0][:])) + col
                                     board[row][col] = " "
                                     board[row][col+1] = " "
                                     board[row-1][col] = pieceType
                                     board[row-1][col+1] = str(value)
                                     prevMove = "d " + str(row) + " " + str(col)
+                                elif(board[row-1][col] == "o" or board[row-1][col+1] == "o"):
+                                    #both are bombs
+                                    if(board[row-1][col] == "o" and board[row-1][col+1] == "o"):
+                                        board[row][col] = " "
+                                        board[row][col+1] = " "
+                                        board[row-1][col] = " "
+                                        board[row-1][col+1] = " "
+                                    #one is a bomb
+                                    elif(board[row-1][col] == "o"):
+                                        board[row][col] = " "
+                                        board[row][col+1] = " "
+                                        board[row-1][col] = " "
+                                    else:
+                                        board[row][col] = " "
+                                        board[row][col+1] = " "
+                                        board[row-1][col+1] = " "
                                 else:
                                     board[row][col] = " "
                                     board[row][col+1] = " "
@@ -1226,13 +1344,29 @@ def doMove(row, col, direction, board, guiMode):
                         elif(direction == "u"):
                             if(prevMove != ("d " + str(row+1) + " " + str(col))):
                                 #moving the piece
-                                if(board[row+1][col] != "s"):
+                                if(board[row+1][col] != "s" and board[row+1][col] != "o" and board[row+1][col+1] != "o"):
                                     value = ((row+1)*len(board[0][:])) + col
                                     board[row][col] = " "
                                     board[row][col+1] = " "
                                     board[row+1][col] = pieceType
                                     board[row+1][col+1] = str(value)
                                     prevMove = "u " + str(row) + " " + str(col)
+                                elif(board[row+1][col] == "o" or board[row+1][col+1] == "o"):
+                                    #both are bombs
+                                    if(board[row+1][col] == "o" and board[row+1][col+1] == "o"):
+                                        board[row][col] = " "
+                                        board[row][col+1] = " "
+                                        board[row+1][col] = " "
+                                        board[row+1][col+1] = " "
+                                    #one is a bomb
+                                    elif(board[row+1][col] == "o"):
+                                        board[row][col] = " "
+                                        board[row][col+1] = " "
+                                        board[row+1][col] = " "
+                                    else:
+                                        board[row][col] = " "
+                                        board[row][col+1] = " "
+                                        board[row+1][col+1] = " "
                                 else:
                                     board[row][col] = " "
                                     board[row][col+1] = " "
@@ -1247,11 +1381,15 @@ def doMove(row, col, direction, board, guiMode):
                         elif(direction == "l"):
                             if(prevMove != ("r " + str(row) + " " + str(col-1))):
                                 #moving the piece
-                                if(board[row][col-1] != "s"):
+                                if(board[row][col-1] != "s" and board[row][col-1] != "o"):
                                     board[row][col] = " "
                                     board[row][col+1] = " "
                                     board[row][col-1] = pieceType
                                     prevMove = "l " + str(row) + " " + str(col)
+                                elif(board[row][col-1] == "o"): #field is a bomb
+                                    board[row][col] = " "
+                                    board[row][col+1] = " "
+                                    board[row][col-1] = " "
                                 else:
                                     board[row][col] = " "
                                     board[row][col+1] = " "
@@ -1266,11 +1404,15 @@ def doMove(row, col, direction, board, guiMode):
                         elif(direction == "r"):
                             if(prevMove != ("l " + str(row) + " " + str(col+2))):
                                 #moving the piece
-                                if(board[row][col+2] != "s"):
+                                if(board[row][col+2] != "s" and board[row][col+2] != "o"):
                                     board[row][col] = " "
                                     board[row][col+1] = " "
                                     board[row][col+2] = pieceType
                                     prevMove = "r " + str(row) + " " + str(col)
+                                elif(board[row][col+2] == "o"): #field is a bomb
+                                    board[row][col] = " "
+                                    board[row][col+1] = " "
+                                    board[row][col+2] = " "
                                 else:
                                     board[row][col] = " "
                                     board[row][col+1] = " "
@@ -1621,14 +1763,9 @@ def doMove(row, col, direction, board, guiMode):
                 #decreasing the moves left
                 movesLeft -= 2
                 
-            #piece is a blocked field
-            elif(pieceType == "x"):
+            elif(board[row][col] == "x" or board[row][col] == "o"):
                 stdio.writeln("No piece on field " + str(row) + " " + str(col))
-                sys.exit()
-                
-            #piece is a sink
-            #elif(pieceType == "s"):
-                #MOVING SINK
+                sys.exit()          
 
         #changing the turn
         if(movesLeft == 0):
@@ -1636,6 +1773,7 @@ def doMove(row, col, direction, board, guiMode):
             turn += 1
             movesLeft += 2
             prevMove = None
+            bombPlaced = False
         
     #direction
         #getting the direction it lies in
