@@ -555,7 +555,7 @@ def validateMove(row, col, direction, board):
             if(direction == "d"):
                 #checking if the board border is reached or not
                 if(row - 3 >= 0):
-                    if((board[row - 1][col] == " " and board[row - 2][col] == " " and board[row - 3][col] == " ") or (board[row - 1][col] == "s" and board[row - 2][col] == "s" and board[row - 3][col] == "s")):
+                    if((board[row - 1][col] == " " and board[row - 2][col] == " " and board[row - 3][col] == " ") or (board[row - 1][col] == "s" and board[row - 2][col] == "s" and board[row - 3][col] == "s") or (board[row - 1][col] == "o" and board[row - 2][col] == "o" and board[row - 3][col] == "o")):
                         return True
                     else:
                         fieldOccupied = True
@@ -570,7 +570,7 @@ def validateMove(row, col, direction, board):
             elif(direction == "u"):
                 #checking if the board border is reached or not
                 if(row + 3 <= len(board) - 1):
-                    if((board[row + 1][col] == " " and board[row + 2][col] == " " and board[row + 3][col] == " ") or (board[row + 1][col] == "s" and board[row + 2][col] == "s" and board[row + 3][col] == "s")):
+                    if((board[row + 1][col] == " " and board[row + 2][col] == " " and board[row + 3][col] == " ") or (board[row + 1][col] == "s" and board[row + 2][col] == "s" and board[row + 3][col] == "s") or (board[row + 1][col] == "o" and board[row + 2][col] == "o" and board[row + 3][col] == "o")):
                         return True
                     else:
                         fieldOccupied = True
@@ -585,7 +585,7 @@ def validateMove(row, col, direction, board):
             elif(direction == "l"):
                 #checking if the board border is reached or not
                 if(col - 3 >= 0):
-                    if((board[row][col - 1] == " " and board[row][col - 2] == " " and board[row][col - 3] == " ")):
+                    if((board[row][col - 1] == " " and board[row][col - 2] == " " and board[row][col - 3] == " ") or (board[row][col - 1] == "s" and board[row][col - 2] == "s" and board[row][col - 3] == "s") or (board[row][col - 1] == "o" and board[row][col - 2] == "o" and board[row][col - 3] == "o")):
                         return True
                     else:
                         fieldOccupied = True
@@ -600,7 +600,7 @@ def validateMove(row, col, direction, board):
             elif(direction == "r"):
                 #checking if the board border is reached or not
                 if(col + 3 <= len(board[0]) - 1):
-                    if((board[row][col + 1] == " " and board[row][col + 2] == " " and board[row][col + 3] == " ") or (board[row][col + 1] == "s" and board[row][col + 2] == "s" and board[row][col + 3] == "s")):
+                    if((board[row][col + 1] == " " and board[row][col + 2] == " " and board[row][col + 3] == " ") or (board[row][col + 1] == "s" and board[row][col + 2] == "s" and board[row][col + 3] == "s") or (board[row][col + 1] == "o" and board[row][col + 2] == "o" and board[row][col + 3] == "o")):
                         return True
                     else:
                         fieldOccupied = True
@@ -633,7 +633,7 @@ def validateMove(row, col, direction, board):
                 if(direction == "u"):
                     #checking if the board border is reached or not
                     if(row + 3 <= len(board) - 1): #only need to check for one field because the piece will flip over into its upright position
-                        if((board[row + 3][col] == " ") or (board[row + 3][col] == "s")):
+                        if((board[row + 3][col] == " ") or (board[row + 3][col] == "s") or (board[row + 3][col] == "o")):
                             return True
                         else:
                             fieldOccupied = True
@@ -644,8 +644,8 @@ def validateMove(row, col, direction, board):
                 #moving down
                 elif(direction == "d"):
                     #checking if the board border is reached or not
-                    if(row - 1 >= 0): #only one field for the same reason as the up direction but needs to be +2 to account for the field the piece is in under its coords
-                        if((board[row - 1][col] == " ") or (board[row - 1][col] == "s")):
+                    if(row - 1 >= 0): #only one field for the same reason as the up direction but needs to be -1 to account for the field the piece is in under its coords
+                        if((board[row - 1][col] == " ") or (board[row - 1][col] == "s") or (board[row - 1][col] == "o")):
                             return True
                         else:
                             fieldOccupied = True
@@ -657,7 +657,7 @@ def validateMove(row, col, direction, board):
                 elif(direction == "l"):
                     #checking if the board border is reached or not
                     if(col - 1 >= 0):
-                        if((board[row][col - 1] == " " and board[row + 1][col - 1] == " " and board[row + 2][col - 1] == " ") or (board[row][col - 1] == "s" and board[row + 1][col - 1] == "s" and board[row + 2][col - 1] == "s")):
+                        if((board[row][col - 1] == " " and board[row + 1][col - 1] == " " and board[row + 2][col - 1] == " ") or (board[row][col - 1] == "s" and board[row + 1][col - 1] == "s" and board[row + 2][col - 1] == "s") or (board[row][col - 1] == "o" or board[row + 1][col - 1] == "o" or board[row + 2][col - 1] == "o")):
                             return True
                         else:
                             fieldOccupied = True
@@ -672,7 +672,7 @@ def validateMove(row, col, direction, board):
                 elif(direction == "r"):
                     #checking if the board border is reached or not
                     if(col + 1 <= len(board[0]) - 1):
-                        if((board[row][col + 1] == " " and board[row + 1][col + 1] == " " and board[row + 2][col + 1] == " ") or (board[row][col + 1] == "s" and board[row + 1][col + 1] == "s" and board[row + 2][col + 1] == "s")):
+                        if((board[row][col + 1] == " " and board[row + 1][col + 1] == " " and board[row + 2][col + 1] == " ") or (board[row][col + 1] == "s" and board[row + 1][col + 1] == "s" and board[row + 2][col + 1] == "s") or (board[row][col + 1] == "o" or board[row + 1][col + 1] == "o" or board[row + 2][col + 1] == "o")):
                             return True
                         else:
                             fieldOccupied = True
@@ -690,7 +690,7 @@ def validateMove(row, col, direction, board):
                 if(direction == "d"):
                     #checking if the board border is reached or not
                     if(row - 1 >= 0):
-                        if((board[row - 1][col] == " " and board[row - 1][col + 1] == " " and board[row - 1][col + 2] == " ") or (board[row - 1][col] == "s" and board[row - 1][col + 1] == "s"  and board[row - 1][col + 2] == "s")):
+                        if((board[row - 1][col] == " " and board[row - 1][col + 1] == " " and board[row - 1][col + 2] == " ") or (board[row - 1][col] == "s" and board[row - 1][col + 1] == "s"  and board[row - 1][col + 2] == "s") or (board[row - 1][col] == "o" or board[row - 1][col + 1] == "o"  or board[row - 1][col + 2] == "o")):
                             return True
                         else:
                             fieldOccupied = True
@@ -705,7 +705,7 @@ def validateMove(row, col, direction, board):
                 elif(direction == "u"):
                     #checking if the board border is reached or not
                     if(row + 1 <= len(board) - 1):
-                        if((board[row + 1][col] == " " and board[row + 1][col + 1] == " " and board[row + 1][col + 2] == " ") or (board[row + 1][col] == "s" and board[row + 1][col + 1] == "s"  and board[row + 1][col + 2] == "s")):
+                        if((board[row + 1][col] == " " and board[row + 1][col + 1] == " " and board[row + 1][col + 2] == " ") or (board[row + 1][col] == "s" and board[row + 1][col + 1] == "s"  and board[row + 1][col + 2] == "s") or (board[row + 1][col] == "o" or board[row + 1][col + 1] == "o"  or board[row + 1][col + 2] == "o")):
                             return True
                         else:
                             fieldOccupied = True
@@ -720,7 +720,7 @@ def validateMove(row, col, direction, board):
                 elif(direction == "l"):
                     #checking if the board border is reached or not
                     if(col - 1 >= 0):
-                        if((board[row][col - 1] == " ") or (board[row][col - 1] == "s")):
+                        if((board[row][col - 1] == " ") or (board[row][col - 1] == "s") or (board[row][col - 1] == "o")):
                             return True
                         else:
                             fieldOccupied = True
@@ -732,7 +732,7 @@ def validateMove(row, col, direction, board):
                 elif(direction == "r"):
                     #checking if the board border is reached or not
                     if(col + 3 <= len(board[0]) - 1):
-                        if((board[row][col + 3] == " ") or (board[row][col + 3] == "s")):
+                        if((board[row][col + 3] == " ") or (board[row][col + 3] == "s") or (board[row][col + 3] == "o")):
                             return True
                         else:
                             fieldOccupied = True
@@ -749,7 +749,7 @@ def validateMove(row, col, direction, board):
         if(direction == "u"):
             #checking if the board border is reached or not
             if(row + 3 <= len(board) - 1):
-                if((board[row + 2][col] == " " and board[row + 3][col] == " " and board[row + 2][col + 1] == " " and board[row + 3][col + 1] == " ") or (board[row + 2][col] == "s" and board[row + 3][col] == "s" and board[row + 2][col + 1] == "s" and board[row + 3][col + 1] == "s")):
+                if((board[row + 2][col] == " " and board[row + 3][col] == " " and board[row + 2][col + 1] == " " and board[row + 3][col + 1] == " ") or (board[row + 2][col] == "s" and board[row + 3][col] == "s" and board[row + 2][col + 1] == "s" and board[row + 3][col + 1] == "s") or (board[row + 2][col] == "o" or board[row + 3][col] == "o" or board[row + 2][col + 1] == "o" or board[row + 3][col + 1] == "o")):
                     return True
                 else:
                     fieldOccupied = True
@@ -765,7 +765,7 @@ def validateMove(row, col, direction, board):
         elif(direction == "d"):
             #checking if the board border is reached or not
             if(row - 2 >= 0):
-                if((board[row - 1][col] == " " and board[row - 2][col] == " " and board[row - 1][col + 1] == " " and board[row - 2][col + 1] == " ") or (board[row - 1][col] == "s" and board[row - 2][col] == "s" and board[row - 1][col + 1] == "s" and board[row - 2][col + 1] == "s")):
+                if((board[row - 1][col] == " " and board[row - 2][col] == " " and board[row - 1][col + 1] == " " and board[row - 2][col + 1] == " ") or (board[row - 1][col] == "s" and board[row - 2][col] == "s" and board[row - 1][col + 1] == "s" and board[row - 2][col + 1] == "s") or (board[row - 1][col] == "o" or board[row - 2][col] == "o" or board[row - 1][col + 1] == "o" or board[row - 2][col + 1] == "o")):
                     return True
                 else:
                     fieldOccupied = True
@@ -781,7 +781,7 @@ def validateMove(row, col, direction, board):
         elif(direction == "l"):
             #checking if the board border is reached or not
             if(col - 2 >= 0):
-                if((board[row][col - 1] == " " and board[row][col - 2] == " " and board[row + 1][col - 1] == " " and board[row + 1][col - 2] == " ") or (board[row][col - 1] == "s" and board[row][col - 2] == "s" and board[row + 1][col - 1] == "s" and board[row + 1][col - 2] == "s")):
+                if((board[row][col - 1] == " " and board[row][col - 2] == " " and board[row + 1][col - 1] == " " and board[row + 1][col - 2] == " ") or (board[row][col - 1] == "s" and board[row][col - 2] == "s" and board[row + 1][col - 1] == "s" and board[row + 1][col - 2] == "s") or (board[row][col - 1] == "o" or board[row][col - 2] == "o" or board[row + 1][col - 1] == "o" or board[row + 1][col - 2] == "o")):
                     return True
                 else:
                     fieldOccupied = True
@@ -797,7 +797,7 @@ def validateMove(row, col, direction, board):
         elif(direction == "r"):
             #checking if the board border is reached or not
             if(col + 3 <= len(board[0]) - 1):
-                if((board[row][col + 2] == " " and board[row][col + 3] == " " and board[row + 1][col + 2] == " " and board[row + 1][col + 3] == " ") or (board[row][col + 2] == "s" and board[row][col + 3] == "s" and board[row + 1][col + 2] == "s" and board[row + 1][col + 3] == "s")):
+                if((board[row][col + 2] == " " and board[row][col + 3] == " " and board[row + 1][col + 2] == " " and board[row + 1][col + 3] == " ") or (board[row][col + 2] == "s" and board[row][col + 3] == "s" and board[row + 1][col + 2] == "s" and board[row + 1][col + 3] == "s") or (board[row][col + 2] == "o" or board[row][col + 3] == "o" or board[row + 1][col + 2] == "o" or board[row + 1][col + 3] == "o")):
                     return True
                 else:
                     fieldOccupied = True
@@ -1437,13 +1437,19 @@ def doMove(row, col, direction, board, guiMode):
                         #checking if the player is moving back to the same spot (will be the opposite to the move here)
                         if(prevMove != "u " + str(row-1) + " " + str(col)):
                             #moving the piece
-                            if(board[row-1][col] != "s"): #remove this at some stage
+                            if(board[row-1][col] != "o" and board[row-2][col] != "o" and board[row-3][col] != "o"):
                                 value = ((row-3)*len(board[0][:])) + col
                                 board[row][col] = " "
                                 board[row-1][col] = str(value) 
                                 board[row-2][col] = str(value) 
                                 board[row-3][col] = pieceType
                                 prevMove = "d " + str(row) + " " + str(col)
+                            else: #one of the fields has a bomb
+                                #looping through the fields and removing the bombs
+                                board[row][col] = " "
+                                for i in range(1,4):
+                                    if(board[row-i][col] == "o"):
+                                        board[row-i][col] = " "
                             #will never move into a sink because the piece is 1x3
                         else: #player is moving back to the same spot
                             stdio.writeln("ERROR: Piece cannot be returned to starting position")
@@ -1452,13 +1458,18 @@ def doMove(row, col, direction, board, guiMode):
                     elif(direction == "u"):
                         if(prevMove != "d " + str(row-1) + " " + str(col)):
                             #moving the piece
-                            if(board[row+1][col] != "s"): #remove this at some stage
+                            if(board[row+1][col] != "o" and board[row+2][col] != "o" and board[row+3][col] != "o"):
                                 value = ((row+1)*len(board[0][:])) + col
                                 board[row][col] = " "
                                 board[row+1][col] = pieceType
                                 board[row+2][col] = str(value)
                                 board[row+3][col] = str(value)
                                 prevMove = "u " + str(row) + " " + str(col)
+                            else:
+                                board[row][col] = " "
+                                for i in range(1,4):
+                                    if(board[row+i][col] == "o"):
+                                        board[row+i][col] = " "
                             #will never move into a sink because the piece is 1x3
                         else: #player is moving back to the same spot
                             stdio.writeln("ERROR: Piece cannot be returned to starting position")
@@ -1467,7 +1478,7 @@ def doMove(row, col, direction, board, guiMode):
                     elif(direction == "l"):
                         if(prevMove != "r " + str(row) + " " + str(col-1)):
                             #moving the piece
-                            if(board[row][col-1] != "s"): #remove this at some stage
+                            if(board[row][col-1] != "o" and board[row][col-2] != "o" and board[row][col-3] != "o"): 
                                 value = (row*len(board[0][:])) + col-3
                                 board[row][col] = " "
                                 board[row][col-3] = pieceType
@@ -1475,6 +1486,11 @@ def doMove(row, col, direction, board, guiMode):
                                 board[row][col-1] = str(value)
                                 prevMove = "l " + str(row) + " " + str(col)
                             #will never move into a sink because the piece is 1x3
+                            else:
+                                board[row][col] = " "
+                                for i in range(1,4):
+                                    if(board[row][col-i] == "o"):
+                                        board[row][col-i] = " "
                         else: #player is moving back to the same spot
                             stdio.writeln("ERROR: Piece cannot be returned to starting position")
                             sys.exit()
@@ -1482,13 +1498,18 @@ def doMove(row, col, direction, board, guiMode):
                     elif(direction == "r"):
                         if(prevMove != "l " + str(row) + " " + str(col+1)):
                             #moving the piece
-                            if(board[row][col+1] != "s"): #remove this at some stage
+                            if(board[row][col+1] != "o" and board[row][col+2] != "o" and board[row][col+3] != "o"): #remove this at some stage
                                 value = (row*len(board[0][:])) + col+1
                                 board[row][col] = " "
                                 board[row][col+1] = pieceType
                                 board[row][col+2] = str(value)
                                 board[row][col+3] = str(value)
                                 prevMove = "r " + str(row) + " " + str(col)
+                            else:
+                                board[row][col] = " "
+                                for i in range(1,4):
+                                    if(board[row][col+i] == "o"):
+                                        board[row][col+i] = " "
                             #will never move into a sink because the piece is 1x3
                         else: #player is moving back to the same spot
                             stdio.writeln("ERROR: Piece cannot be returned to starting position")
@@ -1511,12 +1532,17 @@ def doMove(row, col, direction, board, guiMode):
                         if(direction == "u"):
                             if(prevMove != ("d " + str(row+3) + " " + str(col))):
                                 #moving the piece
-                                if(str(board[row+3][col]) != "s"):
+                                if(str(board[row+3][col]) != "s" and str(board[row+3][col]) != "o"):
                                     board[row][col] = " "
                                     board[row+1][col] = " "
                                     board[row+2][col] = " "
                                     board[row+3][col] = pieceType
                                     prevMove = "u " + str(row) + " " + str(col)
+                                elif(board[row+3][col] == "o"): #field is a bomb
+                                    board[row][col] = " "
+                                    board[row+1][col] = " "
+                                    board[row+2][col] = " "
+                                    board[row+3][col] = " "
                                 else: #piece is being sunk
                                     board[row][col] = " "
                                     board[row+1][col] = " "
@@ -1532,12 +1558,17 @@ def doMove(row, col, direction, board, guiMode):
                         elif(direction == "d"):
                             if(prevMove != ("u " + str(row-1) + " " + str(col))):
                                 #moving the piece
-                                if(board[row-1][col] != "s"):
+                                if(board[row-1][col] != "s" and board[row-1][col] != "o"):
                                     board[row][col] = " "
                                     board[row+1][col] = " "
                                     board[row+2][col] = " "
                                     board[row-1][col] = pieceType
                                     prevMove = "d " + str(row) + " " + str(col)
+                                elif(board[row-1][col] == "o"): #field is a bomb
+                                    board[row][col] = " "
+                                    board[row+1][col] = " "
+                                    board[row+2][col] = " "
+                                    board[row-1][col] = " "
                                 else: #falls into a sink
                                     board[row][col] = " "
                                     board[row+1][col] = " "
@@ -1553,7 +1584,7 @@ def doMove(row, col, direction, board, guiMode):
                         elif(direction == "l"):
                             if(prevMove != ("r " + str(row) + " " + str(col-1))):
                                 #moving the piece
-                                if(board[row][col-1] != "s"): #remove this at some stage
+                                if(board[row][col-1] != "o" and board[row+1][col-1] != "o" and board[row+2][col-1] != "o"):
                                     value = (row*len(board[0][:])) + col-1
                                     board[row][col] = " "
                                     board[row+1][col] = " "
@@ -1562,6 +1593,13 @@ def doMove(row, col, direction, board, guiMode):
                                     board[row+1][col-1] = str(value)
                                     board[row+2][col-1] = str(value)
                                     prevMove = "l " + str(row) + " " + str(col)
+                                else:
+                                    board[row][col] = " "
+                                    board[row+1][col] = " "
+                                    board[row+2][col] = " "
+                                    for i in range(1,4):
+                                        if(board[row+i][col-1] == "o"):
+                                            board[row+i][col-1] = " "
                                 #will never move into a sink because the piece is 1x3
                             else: #player is moving back to the same spot
                                 stdio.writeln("ERROR: Piece cannot be returned to starting position")
@@ -1570,7 +1608,7 @@ def doMove(row, col, direction, board, guiMode):
                         elif(direction == "r"):
                             if(prevMove != ("l " + str(row) + " " + str(col+1))):
                                 #moving the piece
-                                if(board[row][col+1] != "s"): #remove this at some stage
+                                if(board[row][col+1] != "o" and board[row+1][col+1] != "o" and board[row+2][col+1] != "o"):
                                     value = (row*len(board[0][:])) + col+1
                                     board[row][col] = " "
                                     board[row+1][col] = " "
@@ -1579,6 +1617,13 @@ def doMove(row, col, direction, board, guiMode):
                                     board[row+1][col+1] = str(value)
                                     board[row+2][col+1] = str(value)
                                     prevMove = "r " + str(row) + " " + str(col)
+                                else:
+                                    board[row][col] = " "
+                                    board[row+1][col] = " "
+                                    board[row+2][col] = " "
+                                    for i in range(1,4):
+                                        if(board[row+i][col+1] == "o"):
+                                            board[row+i][col+1] = " "
                                 #will never move into a sink because the piece is 1x3
                             else: #player is moving back to the same spot
                                 stdio.writeln("ERROR: Piece cannot be returned to starting position")
@@ -1589,7 +1634,7 @@ def doMove(row, col, direction, board, guiMode):
                         if(direction == "d"):
                             if(prevMove != ("u " + str(row-1) + " " + str(col))):
                                 #moving the piece
-                                if(board[row+1][col] != "s"): #remove at some stage
+                                if(board[row-1][col] != "o" and board[row-1][col+1] != "o" and board[row-1][col+2] != "o"):
                                     value = ((row-1)*len(board[0][:])) + col
                                     board[row][col] = " "
                                     board[row][col+1] = " "
@@ -1598,6 +1643,13 @@ def doMove(row, col, direction, board, guiMode):
                                     board[row-1][col+1] = str(value)
                                     board[row-1][col+2] = str(value)
                                     prevMove = "d " + str(row) + " " + str(col)
+                                else:
+                                    board[row][col] = " "
+                                    board[row][col+1] = " "
+                                    board[row][col+2] = " "
+                                    for i in range(1,4):
+                                        if(board[row-1][col+i] == "o"):
+                                            board[row-1][col+i] = " "
                                 #piece can never fall into a sink because it is 1x3
                             else: #player is moving back to the same spot
                                 stdio.writeln("ERROR: Piece cannot be returned to starting position")
@@ -1606,7 +1658,7 @@ def doMove(row, col, direction, board, guiMode):
                         elif(direction == "u"):
                             if(prevMove != ("d " + str(row+1) + " " + str(col))):
                                 #moving the piece
-                                if(board[row-1][col] != "s"): #remove at some stage
+                                if(board[row+1][col] != "o" and board[row+1][col+1] != "o" and board[row+1][col+2] != "o" ):
                                     value = ((row+1)*len(board[0][:])) + col
                                     board[row][col] = " "
                                     board[row][col+1] = " "
@@ -1615,6 +1667,13 @@ def doMove(row, col, direction, board, guiMode):
                                     board[row+1][col+1] = str(value)
                                     board[row+1][col+2] = str(value)
                                     prevMove = "u " + str(row) + " " + str(col)
+                                else:
+                                    board[row][col] = " "
+                                    board[row][col+1] = " "
+                                    board[row][col+2] = " "
+                                    for i in range(1,4):
+                                        if(board[row+1][col+i] == "o"):
+                                            board[row+1][col+i] = " "
                                 #piece can never fall into a sink because it is 1x3
                             else: #player is moving back to the same spot
                                 stdio.writeln("ERROR: Piece cannot be returned to starting position")
@@ -1623,12 +1682,17 @@ def doMove(row, col, direction, board, guiMode):
                         elif(direction == "l"):
                             if(prevMove != ("r " + str(row) + " " + str(col-1))):
                                 #moving the piece
-                                if(board[row][col-1] != "s"):
+                                if(board[row][col-1] != "s" and board[row][col-1] != "o"):
                                     board[row][col] = " "
                                     board[row][col+1] = " "
                                     board[row][col+2] = " "
                                     board[row][col-1] = pieceType
                                     prevMove = "l " + str(row) + " " + str(col)
+                                elif(board[row][col-1] == "o"): #field is a bomb
+                                    board[row][col] = " "
+                                    board[row][col+1] = " "
+                                    board[row][col+2] = " "
+                                    board[row][col-1] = " "
                                 else: #falling into a sink
                                     board[row][col] = " "
                                     board[row][col+1] = " "
@@ -1644,12 +1708,17 @@ def doMove(row, col, direction, board, guiMode):
                         elif(direction == "r"):
                             if(prevMove != ("l " + str(row) + " " + str(col-3))):
                                 #moving the piece
-                                if(board[row][col+3] != "s"):
+                                if(board[row][col+3] != "s" and board[row][col+3] != "o"):
                                     board[row][col] = " "
                                     board[row][col+1] = " "
                                     board[row][col+2] = " "
                                     board[row][col+3] = pieceType
                                     prevMove = "r " + str(row) + " " + str(col)
+                                elif(board[row][col+3] == "o"): #field is a bomb
+                                    board[row][col] = " "
+                                    board[row][col+1] = " "
+                                    board[row][col+2] = " "
+                                    board[row][col+3] = " "
                                 else:
                                     board[row][col] = " "
                                     board[row][col+1] = " "
@@ -1670,7 +1739,7 @@ def doMove(row, col, direction, board, guiMode):
                 #moving up
                 if(direction == "u"):
                     #moving the piece
-                    if(board[row+2][col] != "s"):
+                    if(board[row+2][col] != "s" and board[row+2][col+1] != "o" and board[row+3][col] != "o" and board[row+3][col+1] != "o" and board[row+2][col] != "o"):
                         value = ((row+2)*len(board[0][:])) + col
                         board[row][col] = " "
                         board[row+1][col] = " "
@@ -1681,6 +1750,15 @@ def doMove(row, col, direction, board, guiMode):
                         board[row+2][col+1] = str(value)
                         board[row+3][col] = str(value)
                         prevMove = "u " + str(row) + " " + str(col)
+                    elif(board[row+2][col] == "o" or board[row+2][col+1] == "o" or board[row+3][col] == "o" or board[row+3][col+1] == "o"):
+                        board[row][col] = " "
+                        board[row+1][col] = " "
+                        board[row][col+1] = " "
+                        board[row+1][col+1] = " "
+                        for i in range(2,4):
+                            for j in range(0,2):
+                                if(board[row+i][col+j] == "o"):
+                                    board[row+i][col+j] = " "
                     else: #field is a sink
                         board[row][col] = " "
                         board[row+1][col] = " "
@@ -1693,7 +1771,7 @@ def doMove(row, col, direction, board, guiMode):
                 #moving down
                 elif(direction == "d"):
                     #moving the piece
-                    if(board[row-2][col] != "s"):
+                    if(board[row-2][col] != "s" and board[row-2][col] != "o" and board[row-2][col+1] != "o" and board[row-1][col] != "o" and board[row-1][col+1] != "o"):
                         value = ((row-1)*len(board[0][:])) + col
                         board[row][col] = " "
                         board[row+1][col] = " "
@@ -1704,6 +1782,15 @@ def doMove(row, col, direction, board, guiMode):
                         board[row-1][col+1] = str(value)
                         board[row-1][col] = str(value)
                         prevMove = "d " + str(row) + " " + str(col)
+                    elif(board[row-2][col] == "o" or board[row-2][col+1] == "o" or board[row-1][col] == "o" or board[row-1][col+1] == "o"):
+                        board[row][col] = " "
+                        board[row+1][col] = " "
+                        board[row][col+1] = " "
+                        board[row+1][col+1] = " "
+                        for i in range(1,3):
+                            for j in range(0,2):
+                                if(board[row-i][col+j] == "o"):
+                                    board[row-i][col+j] = " "
                     else: #field is a sink
                         board[row][col] = " "
                         board[row+1][col] = " "
@@ -1716,7 +1803,7 @@ def doMove(row, col, direction, board, guiMode):
                 #moving left
                 elif(direction == "l"):
                     #moving the piece
-                    if(board[row][col-1] != "s"):
+                    if(board[row][col-1] != "s" and board[row][col-1] != "o" and board[row+1][col-1] != "o" and board[row+1][col-2] != "o" and board[row][col-2] != "o"):
                         value = (row*len(board[0][:])) + col-2
                         board[row][col] = " "
                         board[row+1][col] = " "
@@ -1727,6 +1814,15 @@ def doMove(row, col, direction, board, guiMode):
                         board[row+1][col-2] = str(value)
                         board[row][col-1] = str(value)
                         prevMove = "l " + str(row) + " " + str(col)
+                    elif(board[row][col-1] == "o" or board[row][col-2] == "o" or board[row+1][col-1] == "o" or board[row+1][col-2] == "o"):
+                        board[row][col] = " "
+                        board[row+1][col] = " "
+                        board[row][col+1] = " "
+                        board[row+1][col+1] = " "
+                        for i in range(0,2):
+                            for j in range(1,3):
+                                if(board[row+i][col-j] == "o"):
+                                    board[row+i][col-j] = " "
                     else:
                         board[row][col] = " "
                         board[row+1][col] = " "
@@ -1739,7 +1835,7 @@ def doMove(row, col, direction, board, guiMode):
                 #moving right
                 elif(direction == "r"):
                     #moving the piece
-                    if(board[row][col+2] != "s"):
+                    if(board[row][col+2] != "s" and board[row][col+2] != "o" and board[row+1][col+2] != "o" and board[row+1][col+3] != "o" and board[row][col+3] != "o"):
                         value = (row*len(board[0][:])) + col+2
                         board[row][col] = " "
                         board[row+1][col] = " "
@@ -1750,6 +1846,15 @@ def doMove(row, col, direction, board, guiMode):
                         board[row+1][col+2] = str(value)
                         board[row][col+3] = str(value)
                         prevMove = "r " + str(row) + " " + str(col)
+                    elif(board[row][col+2] == "o" or board[row][col+3] == "o" or board[row+1][col+2] == "o" or board[row+1][col+3] == "o"):
+                        board[row][col] = " "
+                        board[row+1][col] = " "
+                        board[row][col+1] = " "
+                        board[row+1][col+1] = " "
+                        for i in range(0,2):
+                            for j in range(2,4):
+                                if(board[row+i][col+j] == "o"):
+                                    board[row+i][col+j] = " "
                     else:
                         board[row][col] = " "
                         board[row+1][col] = " "
@@ -1774,25 +1879,6 @@ def doMove(row, col, direction, board, guiMode):
             movesLeft += 2
             prevMove = None
             bombPlaced = False
-        
-    #direction
-        #getting the direction it lies in
-        #NEEDED FOR MOVE FUNCTION AND NOT FOR THIS FUNCTION 
-        # else:
-        #     moveDirection = string[len(string) - 1]
-                
-        #     if(moveDirection == "l"):
-        #         stdio.writeln("left")
-        #     elif(moveDirection == "r"):
-        #         stdio.writeln("right")
-        #     elif(moveDirection == "u"):
-        #         stdio.writeln("up")
-        #     elif(moveDirection == "d"):
-        #         stdio.writeln("down")  
-    
-    # This function may be useful for separating out the logic of doing a move.
-    # remove the following line when you add something to this function:
-    pass
 
 #-----------------------------------------------------------------------------------------------------------------------  
 
